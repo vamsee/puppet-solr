@@ -28,11 +28,11 @@ JETTY_PORT=8080
 #JAVA_OPTIONS="-Xmx256m -Djava.awt.headless=true"
 
 # Home of Java installation.
-JAVA_HOME=/usr/lib/jvm/java-1.6.0-openjdk
+# JAVA_HOME=
 
 # The first existing directory is used for JAVA_HOME (if JAVA_HOME is not
 # defined in /etc/default/jetty). Should contain a list of space separated directories.
-#JDK_DIRS="/usr/lib/jvm/default-java /usr/lib/jvm/java-6-sun"
+JDK_DIRS="/usr/lib/jvm/default-java /usr/lib/jvm/java-6-sun"
 
 # Java compiler to use for translating JavaServer Pages (JSPs). You can use all
 # compilers that are accepted by Ant's build.compiler property.

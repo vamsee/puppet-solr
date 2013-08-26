@@ -43,24 +43,41 @@ class solr ($cores = ['development','test']) {
     require => Package['default-jdk'],
   }
 
+  #Copy the jetty config file
+  file { 'jetty-default':
+    ensure => file,
+    path => "/etc/default/jetty",
+    source => "puppet:///modules/solr/jetty-default",
+    notify => Service['jetty'],
+    require => Package['solr-jetty'],
+  }
 
-#   #Removes existing solr install
+  #restart after copying new config
+  service { 'jetty':
+    ensure => running,
+    hasrestart => true,
+    hasstatus => true,
+    #subscribe => file['solr.xml'],
+    require => Package['solr-jetty'],
+  }
+
+#   #removes existing solr install
 #   exec { 'rm-web-inf':
-#     command => "rm -rf ${solr_home}/WEB-INF",
+#     command => "rm -rf ${solr_home}/web-inf",
 #     path => ["/usr/bin", "/usr/sbin", "/bin"],
-#     onlyif => "test -d ${solr_home}/WEB-INF",
-#     require => Package['solr-jetty'],
+#     onlyif => "test -d ${solr_home}/web-inf",
+#     require => package['solr-jetty'],
 #   }
 # 
-#   #Removes existing solr config
+#   #removes existing solr config
 #   exec { 'rm-default-conf':
 #     command => "rm -rf ${solr_home}/conf",
 #     path => ["/usr/bin", "/usr/sbin", "/bin"],
 #     onlyif => "test -d ${solr_home}/conf",
-#     require => Exec['rm-web-inf'],
+#     require => exec['rm-web-inf'],
 #   }
 # 
-#   #Removes existing solr webapp in jetty
+#   #removes existing solr webapp in jetty
 #   exec { 'rm-solr-link':
 #     command => "rm -rf ${jetty_home}/webapps/solr",
 #     path => ["/usr/bin", "/usr/sbin", "/bin"],
@@ -85,14 +102,7 @@ class solr ($cores = ['development','test']) {
 #     require => File['solr.war'],
 #   }
 # 
-#   #Copy the jetty config file
-#   file { 'jetty-default':
-#     ensure => file,
-#     path => "/etc/default/jetty",
-#     source => "puppet:///modules/solr/jetty-default",
-#     require => File['jetty-context.xml']
-#   }
-# 
+ 
 #   #Copy the solr config file
 #   file { 'solr.xml':
 #     ensure => file,
