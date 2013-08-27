@@ -29,21 +29,16 @@
 #
 # Copyright 2012 Vamsee Kanakala, unless otherwise noted.
 #
-class solr ($cores = ['development','test']) {
+class solr (
+  $jetty_home = $solr::params::jetty_home,
+  $solr_home  = $solr::params::solr_home,
+  $cores      = $solr::params::cores,
+) inherits solr::params {
   
-  $jetty_home = "/usr/share/jetty"
-  $solr_home = "/usr/share/solr"
-
-  include solr::install
-
-  #restart after copying new config
-  service { 'jetty':
-    ensure => running,
-    hasrestart => true,
-    hasstatus => true,
-    #subscribe => file['solr.xml'],
-    require => Package['solr-jetty'],
-  }
+  class {'solr::install': } -> 
+  class {'solr::config': } ~> 
+  class {'solr::service': } ->
+  Class['solr']
 
 #   #removes existing solr install
 #   exec { 'rm-web-inf':
