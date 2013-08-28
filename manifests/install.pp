@@ -1,11 +1,11 @@
 class solr::install {
 
   package { 'default-jdk':
-    ensure => present,
+    ensure  => present,
   }
- 
+
   package { 'solr-jetty':
-    ensure => present,
+    ensure  => present,
     require => Package['default-jdk'],
   }
 
