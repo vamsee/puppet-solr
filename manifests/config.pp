@@ -5,7 +5,7 @@ class solr::config {
     ensure  => file,
     path    => '/etc/default/jetty',
     source  => 'puppet:///modules/solr/jetty-default',
-    notify  => Service['jetty'],
+    # notify  => Service['jetty'],
     require => Package['solr-jetty'],
   }
 

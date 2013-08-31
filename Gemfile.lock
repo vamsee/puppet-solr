@@ -5,10 +5,12 @@ GEM
     facter (1.7.2)
     hiera (1.2.1)
       json_pure
+    highline (1.6.19)
     json_pure (1.8.0)
     metaclass (0.0.1)
     mocha (0.14.0)
       metaclass (~> 0.0.1)
+    net-ssh (2.6.8)
     puppet (3.2.4)
       facter (~> 1.6)
       hiera (~> 1.0)
@@ -31,6 +33,10 @@ GEM
     rspec-mocks (2.14.3)
     rspec-puppet (0.1.6)
       rspec
+    serverspec (0.7.11)
+      highline
+      net-ssh
+      rspec (>= 2.13.0)
 
 PLATFORMS
   ruby
@@ -41,3 +47,4 @@ DEPENDENCIES
   puppetlabs_spec_helper
   rake
   rspec-puppet
+  serverspec

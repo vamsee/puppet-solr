@@ -40,30 +40,6 @@ class solr (
   class {'solr::service': } ->
   Class['solr']
 
-#   #removes existing solr install
-#   exec { 'rm-web-inf':
-#     command => "rm -rf ${solr_home}/web-inf",
-#     path => ["/usr/bin", "/usr/sbin", "/bin"],
-#     onlyif => "test -d ${solr_home}/web-inf",
-#     require => package['solr-jetty'],
-#   }
-#
-#   #removes existing solr config
-#   exec { 'rm-default-conf':
-#     command => "rm -rf ${solr_home}/conf",
-#     path => ["/usr/bin", "/usr/sbin", "/bin"],
-#     onlyif => "test -d ${solr_home}/conf",
-#     require => exec['rm-web-inf'],
-#   }
-#
-#   #removes existing solr webapp in jetty
-#   exec { 'rm-solr-link':
-#     command => "rm -rf ${jetty_home}/webapps/solr",
-#     path => ["/usr/bin", "/usr/sbin", "/bin"],
-#     onlyif => "test -L ${jetty_home}/webapps/solr",
-#     require => Exec['rm-default-conf'],
-#   }
-#
 #   #Replaces with our newer version. You can download the
 #   #latest version and add it if you need latest features.
 #   file { 'solr.war':

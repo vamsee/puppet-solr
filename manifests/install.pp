@@ -14,3 +14,4 @@ class solr::install {
     require => Package['jetty'],
   }
 }
+
