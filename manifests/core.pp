@@ -18,14 +18,6 @@ define solr::core() {
     require => Exec["mkdir-p-${title}"],
   }
 
-  #Copy the respective solrconfig.xml file
-  file { "solrconfig-${title}":
-    ensure  => file,
-    path    => "${solr_home}/${title}/conf/solrconfig.xml",
-    content => template('solr/solrconfig.xml.erb'),
-    require => File["core-${title}-conf"],
-  }
-
   #Finally, create the data directory where solr stores
   #its indexes with proper directory ownership/permissions.
   file { "${title}-data-dir":

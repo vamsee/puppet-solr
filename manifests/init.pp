@@ -10,16 +10,22 @@
 #
 # === Parameters
 #
-# Document parameters here.
-#
 # [*cores*]
-#   "Specify the solr cores you want to create"
+#   "Specify the solr cores you want to create (optional)"
 #
 # === Examples
+#
+# Default case, which creates a single core called 'default'
+#
+#  include solr
+#
+# If you want multiple cores, you can supply them like so: 
 #
 #  class { solr:
 #    cores => [ 'development', 'staging', 'production' ]
 #  }
+#
+# You can also manage/create your cores from solr web admin panel.
 #
 # === Authors
 #
@@ -39,24 +45,6 @@ class solr (
   class {'solr::config': } ~>
   class {'solr::service': } ->
   Class['solr']
-
-#   #Replaces with our newer version. You can download the
-#   #latest version and add it if you need latest features.
-#   file { 'solr.war':
-#     ensure => file,
-#     path => "${jetty_home}/webapps/solr.war",
-#     source => "puppet:///modules/solr/solr.war",
-#     require => Exec['rm-solr-link'],
-#   }
-#
-#   #Add a new solr context to jetty
-#   file { 'jetty-context.xml':
-#     ensure => file,
-#     path => "${jetty_home}/contexts/solr.xml",
-#     source => "puppet:///modules/solr/jetty-context.xml",
-#     require => File['solr.war'],
-#   }
-#
 
 #   #Copy the solr config file
 #   file { 'solr.xml':
