@@ -6,7 +6,7 @@ class solr::service {
     hasrestart  => true,
     hasstatus   => true,
     #subscribe  => file['solr.xml'],
-    require     => Package['solr-jetty'],
+    require     => Package['jetty'],
   }
 
 }
