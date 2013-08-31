@@ -13,8 +13,7 @@ describe port(8080) do
   it { should be_listening }
 end
 
-# describe file('/etc/httpd/conf/httpd.conf') do
-#   it { should be_file }
-#   it { should contain "ServerName default" }
-# end
+describe file('/etc/default/jetty') do
+  it { should contain "-Dsolr.solr.home=/usr/share/solr $JAVA_OPTIONS" }
+end
 
