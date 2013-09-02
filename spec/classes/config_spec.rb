@@ -10,12 +10,21 @@ describe 'solr::config' do
   }
 
   it { should contain_file('solr').with({
-      'ensure'  => 'directory',
-      'owner'   => 'root',
-      'group'   => 'root',
-      'recurse' => 'true',
-      'path'    => '/usr/share/solr',
-      'source'  => 'puppet:///modules/solr/solr',
-    })}
+    'ensure'  => 'directory',
+    'owner'   => 'jetty',
+    'group'   => 'jetty',
+    'recurse' => 'true',
+    'path'    => '/usr/share/solr',
+    'source'  => 'puppet:///modules/solr/solr',
+  })}
+
+  it { should contain_file('solr-data').with({
+    'ensure'    => 'directory',
+    'owner'     => 'jetty',
+    'group'     => 'jetty',
+    'mode'      => '0700',
+    'path'      => '/var/lib/solr',
+    'require'   => 'Package[jetty]'})
+  }
 
 end

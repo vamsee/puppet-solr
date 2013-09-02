@@ -1,11 +1,16 @@
 require 'spec_helper'
 
-describe command('ls /usr/share/solr') do
-  it { should return_exit_status 0 }
+describe file('/usr/share/solr') do
+  it { should be_directory }
+  it { should be_owned_by 'jetty' }
+  it { should be_grouped_into 'jetty' }
 end
 
 describe file('/var/lib/solr') do
   it { should be_directory }
+  it { should be_mode 700 }
+  it { should be_owned_by 'jetty' }
+  it { should be_grouped_into 'jetty' }
 end
 
 # describe file('/usr/share/solr') do

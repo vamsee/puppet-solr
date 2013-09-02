@@ -11,11 +11,20 @@ class solr::config {
 
   file { 'solr':
     ensure    => 'directory',
-    owner     => 'root',
-    group     => 'root',
+    owner     => 'jetty',
+    group     => 'jetty',
     recurse   => 'true',
     path      => '/usr/share/solr',
     source    => 'puppet:///modules/solr/solr',
+  }
+
+  file { 'solr-data':
+    ensure    => 'directory',
+    owner     => 'jetty',
+    group     => 'jetty',
+    mode      => '0700',
+    path      => '/var/lib/solr',
+    require   => 'Package[jetty]',
   }
 
 }
