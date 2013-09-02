@@ -13,6 +13,10 @@ describe file('/var/lib/solr') do
   it { should be_grouped_into 'jetty' }
 end
 
+describe file('/usr/share/solr/solr.xml') do
+  it { should be_file }
+end
+
 # describe file('/usr/share/solr') do
 #   it { should be_linked_to '/usr/share/jetty/webapps/solr' }
 # end

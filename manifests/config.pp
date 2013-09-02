@@ -1,4 +1,8 @@
-class solr::config {
+class solr::config( 
+  $jetty_home = $solr::params::jetty_home,
+  $solr_home  = $solr::params::solr_home,
+  $cores      = $solr::params::cores,
+) inherits solr::params {
 
   #Copy the jetty config file
   file { 'jetty-default':
@@ -25,6 +29,15 @@ class solr::config {
     mode      => '0700',
     path      => '/var/lib/solr',
     require   => 'Package[jetty]',
+  }
+
+  file { 'solr.xml':
+    ensure    => 'file',
+    path      => "${solr_home}/solr.xml",
+    owner     => 'jetty',
+    group     => 'jetty',
+    require   => 'File[jetty-default]',
+    content   => template('solr/solr.xml.erb'),
   }
 
 }

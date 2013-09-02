@@ -27,4 +27,13 @@ describe 'solr::config' do
     'require'   => 'Package[jetty]'})
   }
 
+  it { should contain_file('solr.xml').with({
+    'ensure'    => 'file',
+    'path'      => "/usr/share/solr/solr.xml",
+    'owner'     => 'jetty',
+    'group'     => 'jetty',
+    'content'   => /\/var\/lib\/solr\/default/,
+    'require'   => 'File[jetty-default]'})
+  }
+
 end
