@@ -36,4 +36,10 @@ describe 'solr::config' do
     'require'   => 'File[jetty-default]'})
   }
 
+  it { should contain_file('/usr/share/jetty/webapps/solr').with({
+    'ensure'    => 'link',
+    'target'    => '/usr/share/solr',
+    'require'   => 'File[solr.xml]'})
+  }
+
 end

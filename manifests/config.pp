@@ -40,5 +40,11 @@ class solr::config(
     content   => template('solr/solr.xml.erb'),
   }
 
+  file { "${jetty_home}/webapps/solr":
+    ensure    => 'link',
+    target    => $solr_home,
+    require   => 'File[solr.xml]',
+  }
+
 }
 

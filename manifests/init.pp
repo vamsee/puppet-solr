@@ -46,22 +46,6 @@ class solr (
   class {'solr::service': } ->
   Class['solr']
 
-#   #Copy the solr config file
-#   file { 'solr.xml':
-#     ensure => file,
-#     path => "${solr_home}/solr.xml",
-#     content => template('solr/solr.xml.erb'),
-#     require => File['jetty-default'],
-#   }
-#
-#   #Restart after copying new config
-#   service { 'jetty':
-#     ensure => running,
-#     hasrestart => true,
-#     hasstatus => true,
-#     subscribe => File['solr.xml'],
-#   }
-#
 #   #Create our solr cores
 #   solr::core { $cores: }
 #
