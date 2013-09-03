@@ -9,7 +9,7 @@ class solr::config(
     ensure  => file,
     source  => 'puppet:///modules/solr/jetty-default',
     # notify  => Service['jetty'],
-    require => Package[jetty],
+    require => Package['jetty'],
   }
 
   file { $solr_home:
@@ -25,7 +25,7 @@ class solr::config(
     owner     => 'jetty',
     group     => 'jetty',
     mode      => '0700',
-    require   => Package[jetty],
+    require   => Package['jetty'],
   }
 
   file { "${solr_home}/solr.xml":

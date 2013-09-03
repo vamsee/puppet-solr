@@ -14,10 +14,9 @@ define solr::core(
   }
 
   #Copy its config over
-  file { "core-${core_name}-conf":
+  file { "${solr_home}/${core_name}/conf":
     ensure  => directory,
     recurse => true,
-    path    => "${solr_home}/${core_name}/conf",
     source  => 'puppet:///modules/solr/conf',
     require => File["${solr_home}/${core_name}"],
   }

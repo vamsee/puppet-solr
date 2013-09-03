@@ -10,10 +10,9 @@ describe 'solr::core', :type => :define do
     'require'   => 'File[/usr/share/solr]'})
   }
 
-  it { should contain_file('core-default-conf').with({
+  it { should contain_file('/usr/share/solr/default/conf').with({
     'ensure'    =>    'directory',
     'recurse'   =>    'true',
-    'path'      =>    '/usr/share/solr/default/conf',
     'source'    =>    'puppet:///modules/solr/conf',
     'require'   =>    'File[/usr/share/solr/default]'})
   }
