@@ -5,45 +5,41 @@ class solr::config(
 ) inherits solr::params {
 
   #Copy the jetty config file
-  file { 'jetty-default':
-    ensure  => 'file',
-    path    => '/etc/default/jetty',
+  file { '/etc/default/jetty':
+    ensure  => file,
     source  => 'puppet:///modules/solr/jetty-default',
     # notify  => Service['jetty'],
-    require => 'Package[jetty]',
+    require => Package[jetty],
   }
 
-  file { 'solr-dir':
-    ensure    => 'directory',
+  file { $solr_home:
+    ensure    => directory,
     owner     => 'jetty',
     group     => 'jetty',
-    recurse   => 'true',
-    path      => $solr_home,
+    recurse   => true,
     source    => 'puppet:///modules/solr/solr',
   }
 
-  file { 'solr-data':
-    ensure    => 'directory',
+  file { '/var/lib/solr':
+    ensure    => directory,
     owner     => 'jetty',
     group     => 'jetty',
     mode      => '0700',
-    path      => '/var/lib/solr',
-    require   => 'Package[jetty]',
+    require   => Package[jetty],
   }
 
-  file { 'solr.xml':
+  file { "${solr_home}/solr.xml":
     ensure    => 'file',
-    path      => "${solr_home}/solr.xml",
     owner     => 'jetty',
     group     => 'jetty',
-    require   => 'File[jetty-default]',
     content   => template('solr/solr.xml.erb'),
+    require   => File['/etc/default/jetty'],
   }
 
   file { "${jetty_home}/webapps/solr":
     ensure    => 'link',
     target    => $solr_home,
-    require   => 'File[solr.xml]',
+    require   => File["${solr_home}/solr.xml"],
   }
 
 }

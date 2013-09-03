@@ -2,44 +2,40 @@ require 'spec_helper'
 
 describe 'solr::config' do
 
-  it { should contain_file('jetty-default').with({
+  it { should contain_file('/etc/default/jetty').with({
     'ensure'    =>    'file',
-    'path'      =>    '/etc/default/jetty',
     'source'    =>    'puppet:///modules/solr/jetty-default',
     'require'   =>    'Package[jetty]'})
   }
 
-  it { should contain_file('solr-dir').with({
+  it { should contain_file('/usr/share/solr').with({
     'ensure'  => 'directory',
     'owner'   => 'jetty',
     'group'   => 'jetty',
     'recurse' => 'true',
-    'path'    => '/usr/share/solr',
     'source'  => 'puppet:///modules/solr/solr',
   })}
 
-  it { should contain_file('solr-data').with({
+  it { should contain_file('/var/lib/solr').with({
     'ensure'    => 'directory',
     'owner'     => 'jetty',
     'group'     => 'jetty',
     'mode'      => '0700',
-    'path'      => '/var/lib/solr',
     'require'   => 'Package[jetty]'})
   }
 
-  it { should contain_file('solr.xml').with({
+  it { should contain_file('/usr/share/solr/solr.xml').with({
     'ensure'    => 'file',
-    'path'      => "/usr/share/solr/solr.xml",
     'owner'     => 'jetty',
     'group'     => 'jetty',
     'content'   => /\/var\/lib\/solr\/default/,
-    'require'   => 'File[jetty-default]'})
+    'require'   => 'File[/etc/default/jetty]'})
   }
 
   it { should contain_file('/usr/share/jetty/webapps/solr').with({
     'ensure'    => 'link',
     'target'    => '/usr/share/solr',
-    'require'   => 'File[solr.xml]'})
+    'require'   => 'File[/usr/share/solr/solr.xml]'})
   }
 
 end
