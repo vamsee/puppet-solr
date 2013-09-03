@@ -46,7 +46,5 @@ class solr (
   class {'solr::service': } ->
   Class['solr']
 
-#   #Create our solr cores
-#   solr::core { $cores: }
-#
+  solr::core { $cores: }
 }

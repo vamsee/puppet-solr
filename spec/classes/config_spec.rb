@@ -9,7 +9,7 @@ describe 'solr::config' do
     'require'   =>    'Package[jetty]'})
   }
 
-  it { should contain_file('solr').with({
+  it { should contain_file('solr-dir').with({
     'ensure'  => 'directory',
     'owner'   => 'jetty',
     'group'   => 'jetty',

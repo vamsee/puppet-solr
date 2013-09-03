@@ -13,12 +13,12 @@ class solr::config(
     require => 'Package[jetty]',
   }
 
-  file { 'solr':
+  file { 'solr-dir':
     ensure    => 'directory',
     owner     => 'jetty',
     group     => 'jetty',
     recurse   => 'true',
-    path      => '/usr/share/solr',
+    path      => $solr_home,
     source    => 'puppet:///modules/solr/solr',
   }
 
