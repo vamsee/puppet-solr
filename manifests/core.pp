@@ -23,13 +23,11 @@ define solr::core(
 
   #Finally, create the data directory where solr stores
   #its indexes with proper directory ownership/permissions.
-  # file { "${title}-data-dir":
-  #   ensure  => directory,
-  #   path    => "/var/lib/solr/${title}",
-  #   owner   => 'jetty',
-  #   group   => 'jetty',
-  #   require => File["solrconfig-${title}"],
-  #   before  => File['solr.xml'],
-  # }
+  file { "/var/lib/solr/${core_name}":
+    ensure  => directory,
+    owner   => 'jetty',
+    group   => 'jetty',
+    require => File["${solr_home}/${core_name}/conf"],
+  }
 
 }

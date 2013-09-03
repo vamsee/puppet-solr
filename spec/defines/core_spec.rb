@@ -17,5 +17,12 @@ describe 'solr::core', :type => :define do
     'require'   =>    'File[/usr/share/solr/default]'})
   }
 
+  it { should contain_file('/var/lib/solr/default').with({
+    'ensure'    => 'directory',
+    'owner'     => 'jetty',
+    'group'     => 'jetty',
+    'require'   => 'File[/usr/share/solr/default/conf]' })
+  }
+
 end
 
