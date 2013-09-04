@@ -5,6 +5,7 @@ PuppetLint.configuration.ignore_paths = ["pkg/**/*.pp",
                                          "templates/**/*.*",
                                          "files/**/*.*",
                                          "spec/**/*.*",
+                                         "vendor/**/*.*",
                                          "vagrant/**/*.pp"]
 
 RSpec::Core::RakeTask.new(:spec) do |t|
