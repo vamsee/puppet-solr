@@ -16,3 +16,4 @@
 
         * Proper tests, both unit as well as system (serverspec)
 
+        * Added vagrant setup for quick testing of the module
