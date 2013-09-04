@@ -11,24 +11,16 @@
 # - Creates solr config file with cores specified
 # - Links solr home directory to jetty webapps directory
 #
-class solr::config(
-  $cores      = 'UNSET'
-) {
+class solr::config($cores) {
   include solr::params
 
   $jetty_home = $::solr::params::jetty_home
   $solr_home  = $solr::params::solr_home
 
-  $all_cores = $cores ? {
-    'UNSET'   => $::solr::params::cores,
-    default   => $cores,
-  }
-
   #Copy the jetty config file
   file { '/etc/default/jetty':
     ensure  => file,
     source  => 'puppet:///modules/solr/jetty-default',
-    # notify  => Service['jetty'],
     require => Package['jetty'],
   }
 
@@ -62,5 +54,8 @@ class solr::config(
     require   => File["${solr_home}/solr.xml"],
   }
 
+  solr::core { $cores:
+    require   =>  File["${jetty_home}/webapps/solr"],
+  }
 }
 

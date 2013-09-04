@@ -38,10 +38,8 @@
 class solr (
   $cores      = 'UNSET'
 ) {
-  include solr::params
 
-  $jetty_home = $::solr::params::jetty_home
-  $solr_home  = $solr::params::solr_home
+  include solr::params
 
   $all_cores = $cores ? {
     'UNSET'   => $::solr::params::cores,
@@ -49,9 +47,10 @@ class solr (
   }
 
   class {'solr::install': } ->
-  class {'solr::config': } ~>
+  class {'solr::config': 
+    cores => $all_cores
+  } ~>
   class {'solr::service': } ->
   Class['solr']
 
-  solr::core { $all_cores: }
 }

@@ -11,7 +11,6 @@ class solr::service {
     ensure      => running,
     hasrestart  => true,
     hasstatus   => true,
-    #subscribe  => file['solr.xml'],
     require     => Package['jetty'],
   }
 

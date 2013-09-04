@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe 'solr::config' do
+  let(:params) { {:cores => ['default']} }
 
   it { should contain_file('/etc/default/jetty').with({
     'ensure'    =>    'file',
@@ -36,6 +37,10 @@ describe 'solr::config' do
     'ensure'    => 'link',
     'target'    => '/usr/share/solr',
     'require'   => 'File[/usr/share/solr/solr.xml]'})
+  }
+
+  it { should contain_solr__core('default').with({
+    'require'   => 'File[/usr/share/jetty/webapps/solr]'}) 
   }
 
 end
