@@ -1,3 +1,10 @@
+# == Class: solr::install
+# This class installs the required packages for jetty
+#
+# === Actions
+# - Installs default jdk
+# - Installs jetty and extra libs
+#
 class solr::install {
 
   package { 'default-jdk':

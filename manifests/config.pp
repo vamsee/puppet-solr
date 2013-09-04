@@ -1,3 +1,16 @@
+# == Class: solr::config
+# This class sets up solr install
+#
+# === Parameters
+# - The $cores to create
+#
+# === Actions
+# - Copies a new jetty default file
+# - Creates solr home directory
+# - Creates solr data directory
+# - Creates solr config file with cores specified
+# - Links solr home directory to jetty webapps directory
+#
 class solr::config(
   $cores      = 'UNSET'
 ) {

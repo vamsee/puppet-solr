@@ -29,11 +29,11 @@
 #
 # === Authors
 #
-# Vamsee Kanakala <vkanakala AT gmail D0T com>
+# Vamsee Kanakala <vamsee AT riseup D0T net>
 #
 # === Copyright
 #
-# Copyright 2012 Vamsee Kanakala, unless otherwise noted.
+# Copyright 2012-2013 Vamsee Kanakala, unless otherwise noted.
 #
 class solr (
   $cores      = 'UNSET'

@@ -1,8 +1,18 @@
+# == Definition: solr::core
+# This definition sets up solr config and data directories for each core
+#
+# === Parameters
+# - The $core to create
+#
+# === Actions
+# - Creates the solr web app directory for the core
+# - Copies over the config directory for the file
+# - Creates the data directory for the core
+#
 define solr::core(
-  $core_name  = $title,
+  $core_name = $title,
 ) {
   include solr::params
-  include solr::config
 
   $solr_home  = $solr::params::solr_home
 
