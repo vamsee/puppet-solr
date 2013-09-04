@@ -11,7 +11,9 @@
 # - Creates solr config file with cores specified
 # - Links solr home directory to jetty webapps directory
 #
-class solr::config($cores) {
+class solr::config(
+  $cores = 'UNSET',
+) {
   include solr::params
 
   $jetty_home = $::solr::params::jetty_home

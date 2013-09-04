@@ -47,7 +47,7 @@ class solr (
   }
 
   class {'solr::install': } ->
-  class {'solr::config': 
+  class {'solr::config':
     cores => $all_cores
   } ~>
   class {'solr::service': } ->

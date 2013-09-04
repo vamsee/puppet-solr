@@ -19,4 +19,4 @@ RSpec::Core::RakeTask.new("spec:all") do |t|
   t.pattern = 'spec/*/*_spec.rb'
 end
 
-task :default => "spec"
+task :default => ["spec", "lint"]

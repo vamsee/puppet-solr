@@ -22,6 +22,7 @@ class {'update_aptget':
 include solr
 
 # you can also setup mutliple cores by uncommenting the below:
+#
 # class { 'solr':
 #    cores => [ 'development', 'staging', 'production' ]
 # }
