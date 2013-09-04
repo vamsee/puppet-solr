@@ -5,3 +5,14 @@
 06 Jan 2013
 
 	* Added missing files and templates, fixes #1
+
+04 Sep 2013        
+
+        * Update the solr install to the latest stable (4.4)
+
+        * Get rid of solr-jetty dependency in Ubuntu
+
+        * Significantly cleaned up code
+
+        * Proper tests, both unit as well as system (serverspec)
+

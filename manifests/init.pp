@@ -21,7 +21,7 @@
 #
 # If you want multiple cores, you can supply them like so:
 #
-#  class { solr:
+#  class { 'solr':
 #    cores => [ 'development', 'staging', 'production' ]
 #  }
 #
