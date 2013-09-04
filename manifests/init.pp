@@ -36,15 +36,22 @@
 # Copyright 2012 Vamsee Kanakala, unless otherwise noted.
 #
 class solr (
-  $jetty_home = $solr::params::jetty_home,
-  $solr_home  = $solr::params::solr_home,
-  $cores      = $solr::params::cores,
-) inherits solr::params {
+  $cores      = 'UNSET'
+) {
+  include solr::params
+
+  $jetty_home = $::solr::params::jetty_home
+  $solr_home  = $solr::params::solr_home
+
+  $all_cores = $cores ? {
+    'UNSET'   => $::solr::params::cores,
+    default   => $cores,
+  }
 
   class {'solr::install': } ->
   class {'solr::config': } ~>
   class {'solr::service': } ->
   Class['solr']
 
-  solr::core { $cores: }
+  solr::core { $all_cores: }
 }

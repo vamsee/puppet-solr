@@ -1,8 +1,15 @@
-class solr::config( 
-  $jetty_home = $solr::params::jetty_home,
-  $solr_home  = $solr::params::solr_home,
-  $cores      = $solr::params::cores,
-) inherits solr::params {
+class solr::config(
+  $cores      = 'UNSET'
+) {
+  include solr::params
+
+  $jetty_home = $::solr::params::jetty_home
+  $solr_home  = $solr::params::solr_home
+
+  $all_cores = $cores ? {
+    'UNSET'   => $::solr::params::cores,
+    default   => $cores,
+  }
 
   #Copy the jetty config file
   file { '/etc/default/jetty':
