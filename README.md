@@ -1,4 +1,6 @@
-# Solr Module
+# Solr Module  
+
+[![Build Status](https://travis-ci.org/vamsee/puppet-solr.png)](https://travis-ci.org/vamsee/puppet-solr)
 
 This is a puppet module for setting up a multi-core solr instance.
 
