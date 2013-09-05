@@ -3,6 +3,8 @@ require 'spec_helper'
 describe 'solr::config' do
   let(:params) { {:cores => ['default']} }
 
+  it { should contain_solr__params }
+
   it { should contain_file('/etc/default/jetty').with({
     'ensure'    =>    'file',
     'source'    =>    'puppet:///modules/solr/jetty-default',
@@ -10,11 +12,10 @@ describe 'solr::config' do
   }
 
   it { should contain_file('/usr/share/solr').with({
-    'ensure'  => 'directory',
-    'owner'   => 'jetty',
-    'group'   => 'jetty',
-    'recurse' => 'true',
-    'source'  => 'puppet:///modules/solr/solr',
+    'ensure'  =>  'directory',
+    'owner'   =>  'jetty',
+    'group'   =>  'jetty',
+    'require' =>  'Package[jetty]',
   })}
 
   it { should contain_file('/var/lib/solr').with({
