@@ -15,9 +15,10 @@ class solr::config(
   $cores = 'UNSET',
 ) {
   include solr::params
+  include wget
 
   $jetty_home = $::solr::params::jetty_home
-  $solr_home  = $solr::params::solr_home
+  $solr_home  = $::solr::params::solr_home
 
   #Copy the jetty config file
   file { '/etc/default/jetty':
@@ -54,6 +55,13 @@ class solr::config(
     ensure    => 'link',
     target    => $solr_home,
     require   => File["${solr_home}/solr.xml"],
+  }
+
+  wget::fetch { 'solr-download':
+    source        => 'http://www.eng.lsu.edu/mirrors/apache/lucene/solr/4.4.0/solr-4.4.0.tgz',
+    destination   => '/tmp/solr.tgz',
+    timeout       => 0,
+    verbose       => false,
   }
 
   solr::core { $cores:

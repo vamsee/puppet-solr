@@ -46,25 +46,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Use VBoxManage to customize the VM. For example to change memory:
     vb.customize ["modifyvm", :id, "--memory", "1024"]
   end
-  
-  # Enable provisioning with Puppet stand alone.  Puppet manifests
-  # are contained in a directory path relative to this Vagrantfile.
-  # You will need to create the manifests directory and a manifest in
-  # the file base.pp in the manifests_path directory.
-  #
-  # An example Puppet manifest to provision the message of the day:
-  #
-  # # group { "puppet":
-  # #   ensure => "present",
-  # # }
-  # #
-  # # File { owner => 0, group => 0, mode => 0644 }
-  # #
-  # # file { '/etc/motd':
-  # #   content => "Welcome to your Vagrant-built virtual machine!
-  # #               Managed by Puppet.\n"
-  # # }
-  #
+
+  config.vm.provision :shell do |shell|
+    shell.inline = "mkdir -p /etc/puppet/modules;
+                    test ! -e /etc/puppet/modules/wget && puppet module install maestrodev/wget || true"
+  end
+
   config.vm.provision :puppet do |puppet|
     puppet.manifests_path = "vagrant"
     puppet.manifest_file  = "base.pp"
