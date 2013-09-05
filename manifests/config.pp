@@ -15,10 +15,11 @@ class solr::config(
   $cores = 'UNSET',
 ) {
   include solr::params
-  include wget
 
-  $jetty_home = $::solr::params::jetty_home
-  $solr_home  = $::solr::params::solr_home
+  $jetty_home   = $::solr::params::jetty_home
+  $solr_home    = $::solr::params::solr_home
+  $solr_version = $::solr::params::solr_version
+  $file_name    = "solr-${solr_version}.tgz"
 
   #Copy the jetty config file
   file { '/etc/default/jetty':
@@ -31,8 +32,32 @@ class solr::config(
     ensure    => directory,
     owner     => 'jetty',
     group     => 'jetty',
-    recurse   => true,
-    source    => 'puppet:///modules/solr/solr',
+    require   => Package['jetty'],
+  }
+
+  exec { 'solr-download':
+    command   =>  "wget http://www.eng.lsu.edu/mirrors/apache/lucene/solr/${solr_version}/${file_name}",
+    cwd       =>  "/tmp",
+    creates   =>  "/tmp/${file_name}",
+    onlyif    =>  "test ! -f ${solr_home}/WEB-INF && test ! -f /tmp/${file_name}",
+    require   => File[$solr_home],
+  }
+
+  exec { 'extract-solr':
+    path      =>  ['/usr/bin', '/usr/sbin', '/bin'],
+    command   =>  "tar xzvf ${file_name}",
+    cwd       =>  "/tmp",
+    onlyif    =>  "test -f /tmp/${file_name} && test ! -d /tmp/solr-${solr_version}",
+    require   =>  Exec['solr-download'],
+  }
+
+  exec { 'copy-solr':
+    path      =>  ['/usr/bin', '/usr/sbin', '/bin'],
+    command   =>  "jar xvf /tmp/solr-${solr_version}/dist/solr-${solr_version}.war;
+                   cp /tmp/solr-${solr_version}/example/lib/ext/*.jar WEB-INF/lib",
+    cwd       =>  $solr_home,
+    onlyif    =>  "test ! -d ${solr_home}/WEB-INF",
+    require   =>  Exec['extract-solr'],
   }
 
   file { '/var/lib/solr':
@@ -55,13 +80,6 @@ class solr::config(
     ensure    => 'link',
     target    => $solr_home,
     require   => File["${solr_home}/solr.xml"],
-  }
-
-  wget::fetch { 'solr-download':
-    source        => 'http://www.eng.lsu.edu/mirrors/apache/lucene/solr/4.4.0/solr-4.4.0.tgz',
-    destination   => '/tmp/solr.tgz',
-    timeout       => 0,
-    verbose       => false,
   }
 
   solr::core { $cores:

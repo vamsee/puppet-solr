@@ -6,4 +6,4 @@ license 'MIT'
 summary 'A puppet module for solr'
 description 'Configure and set up a multi-core solr instance'
 project_page 'https://github.com/vamsee/puppet-solr'
-dependency 'maestrodev/wget'
+

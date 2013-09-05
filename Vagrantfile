@@ -47,11 +47,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["modifyvm", :id, "--memory", "1024"]
   end
 
-  config.vm.provision :shell do |shell|
-    shell.inline = "mkdir -p /etc/puppet/modules;
-                    test ! -e /etc/puppet/modules/wget && puppet module install maestrodev/wget || true"
-  end
-
   config.vm.provision :puppet do |puppet|
     puppet.manifests_path = "vagrant"
     puppet.manifest_file  = "base.pp"
