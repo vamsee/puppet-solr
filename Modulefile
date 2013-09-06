@@ -1,5 +1,5 @@
 name    'vamsee-solr'
-version '0.0.3'
+version '0.0.4'
 source 'git@github.com:vamsee/puppet-solr.git'
 author 'vamsee'
 license 'MIT'
