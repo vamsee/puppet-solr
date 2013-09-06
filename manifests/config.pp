@@ -41,6 +41,7 @@ class solr::config(
     cwd       =>  '/tmp',
     creates   =>  "/tmp/${file_name}",
     onlyif    =>  "test ! -d ${solr_home}/WEB-INF && test ! -f /tmp/${file_name}",
+    timeout   =>  0,
     require   => File[$solr_home],
   }
 

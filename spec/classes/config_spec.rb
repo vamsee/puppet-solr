@@ -49,6 +49,7 @@ describe 'solr::config' do
     'cwd'       =>  '/tmp',
     'creates'   =>  '/tmp/solr-4.4.0.tgz',
     'onlyif'    =>  'test ! -d /usr/share/solr/WEB-INF && test ! -f /tmp/solr-4.4.0.tgz',
+    'timeout'   =>  0,
     'require'   =>  'File[/usr/share/solr]'})  
   }
 
