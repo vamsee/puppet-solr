@@ -27,7 +27,7 @@ use this to quickly test the module for yourself. Just cd into the directory and
     vagrant up
 
 The solr server maps to port 8080 by default, and vagrant maps this to port 8080 on host system also.
-So you should be able to see the solr server running at http://0.0.0.0:8080. This module also has
+So you should be able to see the solr server running at http://0.0.0.0:8080/solr. This module also has
 a good test suite, you can run the specs by simply typing:
 
     rake
