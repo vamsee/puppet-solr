@@ -7,6 +7,7 @@
 # === Actions
 # - Copies a new jetty default file
 # - Creates solr home directory
+# - Downloads solr 4.4.0, extracts war and copies logging jars
 # - Creates solr data directory
 # - Creates solr config file with cores specified
 # - Links solr home directory to jetty webapps directory
@@ -36,6 +37,7 @@ class solr::config(
     require   => Package['jetty'],
   }
 
+  # download only if WEB-INF is not present and tgz file is not in /tmp:
   exec { 'solr-download':
     command   =>  "wget ${download_site}/${solr_version}/${file_name}",
     cwd       =>  '/tmp',
@@ -53,6 +55,7 @@ class solr::config(
     require   =>  Exec['solr-download'],
   }
 
+  # have to copy logging jars separately from solr 4.3 onwards
   exec { 'copy-solr':
     path      =>  ['/usr/bin', '/usr/sbin', '/bin'],
     command   =>  "jar xvf /tmp/solr-${solr_version}/dist/solr-${solr_version}.war; cp /tmp/solr-${solr_version}/example/lib/ext/*.jar WEB-INF/lib",
