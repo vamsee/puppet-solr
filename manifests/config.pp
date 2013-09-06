@@ -16,10 +16,11 @@ class solr::config(
 ) {
   include solr::params
 
-  $jetty_home   = $::solr::params::jetty_home
-  $solr_home    = $::solr::params::solr_home
-  $solr_version = $::solr::params::solr_version
-  $file_name    = "solr-${solr_version}.tgz"
+  $jetty_home     = $::solr::params::jetty_home
+  $solr_home      = $::solr::params::solr_home
+  $solr_version   = $::solr::params::solr_version
+  $file_name      = "solr-${solr_version}.tgz"
+  $download_site  = 'http://www.eng.lsu.edu/mirrors/apache/lucene/solr'
 
   #Copy the jetty config file
   file { '/etc/default/jetty':
@@ -36,25 +37,24 @@ class solr::config(
   }
 
   exec { 'solr-download':
-    command   =>  "wget http://www.eng.lsu.edu/mirrors/apache/lucene/solr/${solr_version}/${file_name}",
-    cwd       =>  "/tmp",
+    command   =>  "wget ${download_site}/${solr_version}/${file_name}",
+    cwd       =>  '/tmp',
     creates   =>  "/tmp/${file_name}",
-    onlyif    =>  "test ! -f ${solr_home}/WEB-INF && test ! -f /tmp/${file_name}",
+    onlyif    =>  "test ! -d ${solr_home}/WEB-INF && test ! -f /tmp/${file_name}",
     require   => File[$solr_home],
   }
 
   exec { 'extract-solr':
     path      =>  ['/usr/bin', '/usr/sbin', '/bin'],
     command   =>  "tar xzvf ${file_name}",
-    cwd       =>  "/tmp",
+    cwd       =>  '/tmp',
     onlyif    =>  "test -f /tmp/${file_name} && test ! -d /tmp/solr-${solr_version}",
     require   =>  Exec['solr-download'],
   }
 
   exec { 'copy-solr':
     path      =>  ['/usr/bin', '/usr/sbin', '/bin'],
-    command   =>  "jar xvf /tmp/solr-${solr_version}/dist/solr-${solr_version}.war;
-                   cp /tmp/solr-${solr_version}/example/lib/ext/*.jar WEB-INF/lib",
+    command   =>  "jar xvf /tmp/solr-${solr_version}/dist/solr-${solr_version}.war; cp /tmp/solr-${solr_version}/example/lib/ext/*.jar WEB-INF/lib",
     cwd       =>  $solr_home,
     onlyif    =>  "test ! -d ${solr_home}/WEB-INF",
     require   =>  Exec['extract-solr'],

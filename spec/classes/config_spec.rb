@@ -44,4 +44,28 @@ describe 'solr::config' do
     'require'   => 'File[/usr/share/jetty/webapps/solr]'}) 
   }
 
+  it { should contain_exec('solr-download').with({
+    'command'   =>  'wget http://www.eng.lsu.edu/mirrors/apache/lucene/solr/4.4.0/solr-4.4.0.tgz',
+    'cwd'       =>  '/tmp',
+    'creates'   =>  '/tmp/solr-4.4.0.tgz',
+    'onlyif'    =>  'test ! -d /usr/share/solr/WEB-INF && test ! -f /tmp/solr-4.4.0.tgz',
+    'require'   =>  'File[/usr/share/solr]'})  
+  }
+
+  it { should contain_exec('extract-solr').with({
+    'path'      =>  '["/usr/bin", "/usr/sbin", "/bin"]',
+    'command'   =>  'tar xzvf solr-4.4.0.tgz',
+    'cwd'       =>  '/tmp',
+    'onlyif'    =>  'test -f /tmp/solr-4.4.0.tgz && test ! -d /tmp/solr-4.4.0',
+    'require'   =>  'Exec[solr-download]', })
+  }
+
+  it { should contain_exec('copy-solr').with({
+    'path'      =>  '["/usr/bin", "/usr/sbin", "/bin"]',
+    'command'   =>  'jar xvf /tmp/solr-4.4.0/dist/solr-4.4.0.war; cp /tmp/solr-4.4.0/example/lib/ext/*.jar WEB-INF/lib',
+    'cwd'       =>  '/usr/share/solr',
+    'onlyif'    =>  'test ! -d /usr/share/solr/WEB-INF',
+    'require'   =>  'Exec[extract-solr]' })
+  }
+
 end
