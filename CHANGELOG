@@ -1,12 +1,12 @@
 23 Sep 2012
-	
+
 	* First release
-	
+
 06 Jan 2013
 
 	* Added missing files and templates, fixes #1
 
-04 Sep 2013        
+04 Sep 2013
 
         * Update the solr install to the latest stable (4.4)
 
@@ -17,3 +17,8 @@
         * Proper tests, both unit as well as system (serverspec)
 
         * Added vagrant setup for quick testing of the module
+
+06 Sep 2013
+
+        * Small rewrite - download solr and setup webapp as forge
+          doesn't accept modules more than 20MB or so.
