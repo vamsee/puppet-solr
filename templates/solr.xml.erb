@@ -1,8 +1,8 @@
 <solr persistent="true" sharedLib="lib">
  <cores adminPath="/admin/cores">
-  <% cores.each do |core| %>
-    <core name="<%=core%>" instanceDir="<%=core%>"
-          dataDir="/var/lib/solr/<%=core%>" />
+  <% @cores.each do |core| %>
+    <core name="<%= core -%>" instanceDir="<%= core -%>"
+          dataDir="/var/lib/solr/<%= core -%>" />
   <% end %>
  </cores>
 </solr>
