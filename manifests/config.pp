@@ -7,21 +7,24 @@
 # === Actions
 # - Copies a new jetty default file
 # - Creates solr home directory
-# - Downloads solr 4.4.0, extracts war and copies logging jars
+# - Downloads the required solr version, extracts war and copies logging jars
 # - Creates solr data directory
 # - Creates solr config file with cores specified
 # - Links solr home directory to jetty webapps directory
 #
 class solr::config(
-  $cores = 'UNSET',
+  $cores   = 'UNSET',
+  $version = 'UNSET',
+  $mirror  = 'UNSET'
 ) {
   include solr::params
 
   $jetty_home     = $::solr::params::jetty_home
   $solr_home      = $::solr::params::solr_home
   $solr_version   = $::solr::params::solr_version
-  $file_name      = "solr-${solr_version}.tgz"
-  $download_site  = 'http://www.eng.lsu.edu/mirrors/apache/lucene/solr'
+  $mirror_site    = $::solr::params::mirror_site
+  $dl_name        = "solr-${solr_version}.tgz"
+  $download_url   = "${mirror_site}/${solr_version}/${dl_name}"
 
   #Copy the jetty config file
   file { '/etc/default/jetty':
@@ -39,19 +42,19 @@ class solr::config(
 
   # download only if WEB-INF is not present and tgz file is not in /tmp:
   exec { 'solr-download':
-    command   =>  "wget ${download_site}/${solr_version}/${file_name}",
+    command   =>  "wget ${download_url}",
     cwd       =>  '/tmp',
-    creates   =>  "/tmp/${file_name}",
-    onlyif    =>  "test ! -d ${solr_home}/WEB-INF && test ! -f /tmp/${file_name}",
+    creates   =>  "/tmp/${dl_name}",
+    onlyif    =>  "test ! -d ${solr_home}/WEB-INF && test ! -f /tmp/${dl_name}",
     timeout   =>  0,
     require   => File[$solr_home],
   }
 
   exec { 'extract-solr':
     path      =>  ['/usr/bin', '/usr/sbin', '/bin'],
-    command   =>  "tar xzvf ${file_name}",
+    command   =>  "tar xzvf ${dl_name}",
     cwd       =>  '/tmp',
-    onlyif    =>  "test -f /tmp/${file_name} && test ! -d /tmp/solr-${solr_version}",
+    onlyif    =>  "test -f /tmp/${dl_name} && test ! -d /tmp/solr-${solr_version}",
     require   =>  Exec['solr-download'],
   }
 
