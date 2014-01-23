@@ -7,26 +7,36 @@
 #
 class solr::install {
 
-  package { 'default-jdk':
-    ensure  => present,
+  if ! defined(Package['default-jdk']) {
+    package { 'default-jdk':
+      ensure  => present,
+    }
   }
 
-  package { 'jetty':
-    ensure  => present,
-    require => Package['default-jdk'],
+  if ! defined(Package['jetty']) {
+    package { 'jetty':
+      ensure  => present,
+      require => Package['default-jdk'],
+    }
   }
 
-  package { 'libjetty-extra':
-    ensure  => present,
-    require => Package['jetty'],
+  if ! defined(Package['libjetty-extra']) {
+    package { 'libjetty-extra':
+      ensure  => present,
+      require => Package['jetty'],
+    }
+  }
+  
+  if ! defined(Package['wget']) {
+    package { 'wget':
+      ensure  => present,
+    }
   }
 
-  package { 'wget':
-    ensure  => present,
-  }
-
-  package { 'curl':
-    ensure  => present,
+  if ! defined(Package['curl']) {
+    package { 'curl':
+      ensure  => present,
+    }
   }
 }
 
