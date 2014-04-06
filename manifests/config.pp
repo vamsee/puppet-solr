@@ -7,7 +7,7 @@
 # === Actions
 # - Copies a new jetty default file
 # - Creates solr home directory
-# - Downloads solr 4.4.0, extracts war and copies logging jars
+# - Downloads solr 4.7.1, extracts war and copies logging jars
 # - Creates solr data directory
 # - Creates solr config file with cores specified
 # - Links solr home directory to jetty webapps directory
