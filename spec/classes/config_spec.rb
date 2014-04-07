@@ -45,7 +45,7 @@ describe 'solr::config' do
   }
 
   it { should contain_exec('solr-download').with({
-    'command'   =>  'wget http://www.eng.lsu.edu/mirrors/apache/lucene/solr/4.7.1/solr-4.7.1.tgz',
+    'command'   =>  'wget http://archive.apache.org/dist/lucene/solr/4.7.1/solr-4.7.1.tgz',
     'cwd'       =>  '/tmp',
     'creates'   =>  '/tmp/solr-4.7.1.tgz',
     'onlyif'    =>  'test ! -d /usr/share/solr/WEB-INF && test ! -f /tmp/solr-4.7.1.tgz',
