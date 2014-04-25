@@ -51,10 +51,10 @@ describe 'solr::config' do
 
     it { should contain_exec('solr-download')
         .with({
-                'command'   =>  'wget http://www.us.apache.org/dist/lucene/solr/4.5.0/solr-4.5.0.tgz',
+                'command'   =>  'wget http://www.us.apache.org/dist/lucene/solr/4.7.2/solr-4.7.2.tgz',
                 'cwd'       =>  '/tmp',
-                'creates'   =>  '/tmp/solr-4.5.0.tgz',
-                'onlyif'    =>  'test ! -d /usr/share/solr/WEB-INF && test ! -f /tmp/solr-4.5.0.tgz',
+                'creates'   =>  '/tmp/solr-4.7.2.tgz',
+                'onlyif'    =>  'test ! -d /usr/share/solr/WEB-INF && test ! -f /tmp/solr-4.7.2.tgz',
                 'timeout'   =>  0,
                 'require'   =>  'File[/usr/share/solr]'
               })
@@ -63,9 +63,9 @@ describe 'solr::config' do
     it { should contain_exec('extract-solr')
         .with({
                 'path'      =>  '["/usr/bin", "/usr/sbin", "/bin"]',
-                'command'   =>  'tar xzvf solr-4.5.0.tgz',
+                'command'   =>  'tar xzvf solr-4.7.2.tgz',
                 'cwd'       =>  '/tmp',
-                'onlyif'    =>  'test -f /tmp/solr-4.5.0.tgz && test ! -d /tmp/solr-4.5.0',
+                'onlyif'    =>  'test -f /tmp/solr-4.7.2.tgz && test ! -d /tmp/solr-4.7.2',
                 'require'   =>  'Exec[solr-download]',
               })
     }
@@ -73,7 +73,7 @@ describe 'solr::config' do
     it { should contain_exec('copy-solr')
         .with({
                 'path'      =>  '["/usr/bin", "/usr/sbin", "/bin"]',
-                'command'   =>  'jar xvf /tmp/solr-4.5.0/dist/solr-4.5.0.war; cp /tmp/solr-4.5.0/example/lib/ext/*.jar WEB-INF/lib',
+                'command'   =>  'jar xvf /tmp/solr-4.7.2/dist/solr-4.7.2.war; cp /tmp/solr-4.7.2/example/lib/ext/*.jar WEB-INF/lib',
                 'cwd'       =>  '/usr/share/solr',
                 'onlyif'    =>  'test ! -d /usr/share/solr/WEB-INF',
                 'require'   =>  'Exec[extract-solr]',

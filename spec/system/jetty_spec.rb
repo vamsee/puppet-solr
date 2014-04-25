@@ -18,5 +18,5 @@ describe file('/etc/default/jetty') do
 end
 
 describe command("curl -IL 'http://0.0.0.0:8080/solr'") do
-  it { should return_stdout /HTTP\/1.1 200 OK/ }
+  it { should return_stdout(/HTTP\/1.1 200 OK/) }
 end

@@ -18,12 +18,12 @@ class {'update_aptget':
   stage => first,
 }
 
-# default use case:
-include solr
+# default use case
+# include solr
 
-# you can also setup mutliple cores by uncommenting the below:
-#
-# class { 'solr':
-#    cores => [ 'development', 'staging', 'production' ]
-# }
-# 
+# With all options
+class { 'solr':
+  mirror        => 'http://apache.mesi.com.ar/lucene/solr',
+  version       => '4.7.2',
+  cores         => ['development', 'staging', 'production'],
+}

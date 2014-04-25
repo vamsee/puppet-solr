@@ -11,7 +11,7 @@ describe 'solr' do
     it { should contain_class('solr::config')
         .with({
                 'cores'     => ['default'],
-                'version'   => '4.5.0',
+                'version'   => '4.7.2',
                 'mirror'    => 'http://www.us.apache.org/dist/lucene/solr',
               })
     }
