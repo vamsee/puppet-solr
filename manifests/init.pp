@@ -35,20 +35,35 @@
 #
 # Copyright 2012-2013 Vamsee Kanakala, unless otherwise noted.
 #
+
 class solr (
-  $cores      = 'UNSET'
+  $cores      = 'UNSET',
+  $version    = 'UNSET',
+  $mirror     = 'UNSET',
 ) {
 
   include solr::params
 
-  $all_cores = $cores ? {
+  $my_cores = $cores ? {
     'UNSET'   => $::solr::params::cores,
     default   => $cores,
   }
 
+  $my_version = $version ? {
+    'UNSET'   => $::solr::params::solr_version,
+    default   => $version,
+  }
+
+  $my_mirror = $version ? {
+    'UNSET'   => $::solr::params::mirror_site,
+    default   => $mirror,
+  }
+
   class {'solr::install': } ->
   class {'solr::config':
-    cores => $all_cores
+    cores   => $my_cores,
+    version => $my_version,
+    mirror  => $my_mirror,
   } ~>
   class {'solr::service': } ->
   Class['solr']
