@@ -6,7 +6,7 @@ This is a puppet module for setting up a multi-core solr instance.
 
 ## Quick Start
 
-Put this in your solr.pp file and run sudo puppet apply:
+Put this in your site.pp file and run sudo puppet apply:
 
     include solr
 
@@ -14,6 +14,14 @@ If you need multiple cores out of the box, you can run this:
 
     class { solr:
       cores => [ 'development', 'staging', 'production' ]
+    }
+
+It's _**highly**_ recommended that you use a mirror like so:
+
+    class { 'solr':
+      mirror        => 'http://apache.mesi.com.ar/lucene/solr',
+      version       => '4.7.2',
+      cores         => ['development', 'staging', 'production'],
     }
 
 **NOTE**: Currently only Ubuntu is supported, contributions for other platforms are most welcome.
