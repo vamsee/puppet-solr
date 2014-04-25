@@ -13,18 +13,15 @@
 # - Links solr home directory to jetty webapps directory
 #
 class solr::config(
-  $cores   = 'UNSET',
-  $version = 'UNSET',
-  $mirror  = 'UNSET'
-) {
-  include solr::params
+  $cores          = $solr::params::cores,
+  $version        = $solr::params::solr_version,
+  $mirror         = $solr::params::mirror_site,
+  $jetty_home     = $solr::params::jetty_home,
+  $solr_home      = $solr::params::solr_home,
+  ) inherits solr::params {
 
-  $jetty_home     = $::solr::params::jetty_home
-  $solr_home      = $::solr::params::solr_home
-  $solr_version   = $::solr::params::solr_version
-  $mirror_site    = $::solr::params::mirror_site
-  $dl_name        = "solr-${solr_version}.tgz"
-  $download_url   = "${mirror_site}/${solr_version}/${dl_name}"
+  $dl_name        = "solr-${version}.tgz"
+  $download_url   = "${mirror}/${version}/${dl_name}"
 
   #Copy the jetty config file
   file { '/etc/default/jetty':
@@ -54,14 +51,14 @@ class solr::config(
     path      =>  ['/usr/bin', '/usr/sbin', '/bin'],
     command   =>  "tar xzvf ${dl_name}",
     cwd       =>  '/tmp',
-    onlyif    =>  "test -f /tmp/${dl_name} && test ! -d /tmp/solr-${solr_version}",
+    onlyif    =>  "test -f /tmp/${dl_name} && test ! -d /tmp/solr-${version}",
     require   =>  Exec['solr-download'],
   }
 
   # have to copy logging jars separately from solr 4.3 onwards
   exec { 'copy-solr':
     path      =>  ['/usr/bin', '/usr/sbin', '/bin'],
-    command   =>  "jar xvf /tmp/solr-${solr_version}/dist/solr-${solr_version}.war; cp /tmp/solr-${solr_version}/example/lib/ext/*.jar WEB-INF/lib",
+    command   =>  "jar xvf /tmp/solr-${version}/dist/solr-${version}.war; cp /tmp/solr-${version}/example/lib/ext/*.jar WEB-INF/lib",
     cwd       =>  $solr_home,
     onlyif    =>  "test ! -d ${solr_home}/WEB-INF",
     require   =>  Exec['extract-solr'],
