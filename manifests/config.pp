@@ -39,6 +39,7 @@ class solr::config(
 
   # download only if WEB-INF is not present and tgz file is not in /tmp:
   exec { 'solr-download':
+    path      =>  ['/usr/bin', '/usr/sbin', '/bin'],
     command   =>  "wget ${download_url}",
     cwd       =>  '/tmp',
     creates   =>  "/tmp/${dl_name}",
