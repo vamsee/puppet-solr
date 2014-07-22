@@ -54,6 +54,7 @@ class solr::config(
     cwd       =>  '/tmp',
     onlyif    =>  "test -f /tmp/${dl_name} && test ! -d /tmp/solr-${version}",
     require   =>  Exec['solr-download'],
+    path      => "/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin"
   }
 
   # have to copy logging jars separately from solr 4.3 onwards
