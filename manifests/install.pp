@@ -25,8 +25,10 @@ class solr::install {
     ensure  => present,
   }
 
-  package { 'curl':
-    ensure  => present,
+  if !Package['curl'] {
+    package { 'curl':
+      ensure  => present,
+    }
   }
 }
 
