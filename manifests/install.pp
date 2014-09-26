@@ -25,7 +25,7 @@ class solr::install {
     ensure  => present,
   }
 
-  if defined(Package['curl'] == false {
+  if defined(Package['curl']) == false {
     package { 'curl':
       ensure  => present,
     }
