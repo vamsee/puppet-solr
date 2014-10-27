@@ -31,60 +31,60 @@ class solr::config(
   }
 
   file { $solr_home:
-    ensure    => directory,
-    owner     => 'jetty',
-    group     => 'jetty',
-    require   => Package['jetty'],
+    ensure  => directory,
+    owner   => 'jetty',
+    group   => 'jetty',
+    require => Package['jetty'],
   }
 
   # download only if WEB-INF is not present and tgz file is not in /tmp:
   exec { 'solr-download':
-    path      =>  ['/usr/bin', '/usr/sbin', '/bin'],
-    command   =>  "wget ${download_url}",
-    cwd       =>  '/tmp',
-    creates   =>  "/tmp/${dl_name}",
-    onlyif    =>  "test ! -d ${solr_home}/WEB-INF && test ! -f /tmp/${dl_name}",
-    timeout   =>  0,
-    require   => File[$solr_home],
+    path    =>  ['/usr/bin', '/usr/sbin', '/bin'],
+    command =>  "wget ${download_url}",
+    cwd     =>  '/tmp',
+    creates =>  "/tmp/${dl_name}",
+    onlyif  =>  "test ! -d ${solr_home}/WEB-INF && test ! -f /tmp/${dl_name}",
+    timeout =>  0,
+    require => File[$solr_home],
   }
 
   exec { 'extract-solr':
-    path      =>  ['/usr/bin', '/usr/sbin', '/bin'],
-    command   =>  "tar xzvf ${dl_name}",
-    cwd       =>  '/tmp',
-    onlyif    =>  "test -f /tmp/${dl_name} && test ! -d /tmp/solr-${version}",
-    require   =>  Exec['solr-download'],
+    path    =>  ['/usr/bin', '/usr/sbin', '/bin'],
+    command =>  "tar xzvf ${dl_name}",
+    cwd     =>  '/tmp',
+    onlyif  =>  "test -f /tmp/${dl_name} && test ! -d /tmp/solr-${version}",
+    require =>  Exec['solr-download'],
   }
 
   # have to copy logging jars separately from solr 4.3 onwards
   exec { 'copy-solr':
-    path      =>  ['/usr/bin', '/usr/sbin', '/bin'],
-    command   =>  "jar xvf /tmp/solr-${version}/dist/solr-${version}.war; cp /tmp/solr-${version}/example/lib/ext/*.jar WEB-INF/lib",
-    cwd       =>  $solr_home,
-    onlyif    =>  "test ! -d ${solr_home}/WEB-INF",
-    require   =>  Exec['extract-solr'],
+    path    =>  ['/usr/bin', '/usr/sbin', '/bin'],
+    command =>  "jar xvf /tmp/solr-${version}/dist/solr-${version}.war; cp /tmp/solr-${version}/example/lib/ext/*.jar WEB-INF/lib",
+    cwd     =>  $solr_home,
+    onlyif  =>  "test ! -d ${solr_home}/WEB-INF",
+    require =>  Exec['extract-solr'],
   }
 
   file { '/var/lib/solr':
-    ensure    => directory,
-    owner     => 'jetty',
-    group     => 'jetty',
-    mode      => '0700',
-    require   => Package['jetty'],
+    ensure  => directory,
+    owner   => 'jetty',
+    group   => 'jetty',
+    mode    => '0700',
+    require => Package['jetty'],
   }
 
   file { "${solr_home}/solr.xml":
-    ensure    => 'file',
-    owner     => 'jetty',
-    group     => 'jetty',
-    content   => template('solr/solr.xml.erb'),
-    require   => File['/etc/default/jetty'],
+    ensure  => 'file',
+    owner   => 'jetty',
+    group   => 'jetty',
+    content => template('solr/solr.xml.erb'),
+    require => File['/etc/default/jetty'],
   }
 
   file { "${jetty_home}/webapps/solr":
-    ensure    => 'link',
-    target    => $solr_home,
-    require   => File["${solr_home}/solr.xml"],
+    ensure  => 'link',
+    target  => $solr_home,
+    require => File["${solr_home}/solr.xml"],
   }
 
   solr::core { $cores:
