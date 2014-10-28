@@ -23,7 +23,7 @@ class {'update_aptget':
 
 # With all options
 class { 'solr':
-  mirror        => 'http://apache.mesi.com.ar/lucene/solr',
-  version       => '4.7.2',
-  cores         => ['development', 'staging', 'production'],
+  mirror  => 'http://apache.mesi.com.ar/lucene/solr',
+  version => '4.7.2',
+  cores   => ['development', 'staging', 'production'],
 }
