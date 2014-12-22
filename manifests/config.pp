@@ -50,7 +50,7 @@ class solr::config(
 
   exec { 'extract-solr':
     path    =>  ['/usr/bin', '/usr/sbin', '/bin'],
-    command =>  "tar xzvf ${dl_name}",
+    command =>  "tar xvf ${dl_name}",
     cwd     =>  '/tmp',
     onlyif  =>  "test -f /tmp/${dl_name} && test ! -d /tmp/solr-${version}",
     require =>  Exec['solr-download'],
