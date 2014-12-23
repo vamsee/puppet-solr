@@ -63,7 +63,7 @@ describe 'solr::config' do
     it { should contain_exec('extract-solr')
         .with({
                 'path'      =>  '["/usr/bin", "/usr/sbin", "/bin"]',
-                'command'   =>  'tar xzvf solr-4.7.2.tgz',
+                'command'   =>  'tar xvf solr-4.7.2.tgz',
                 'cwd'       =>  '/tmp',
                 'onlyif'    =>  'test -f /tmp/solr-4.7.2.tgz && test ! -d /tmp/solr-4.7.2',
                 'require'   =>  'Exec[solr-download]',
