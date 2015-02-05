@@ -26,6 +26,8 @@ define solr::core(
   #Copy its config over
   file { "${solr_home}/${core_name}/conf":
     ensure  => directory,
+    owner   => 'jetty',
+    group   => 'jetty',
     recurse => true,
     source  => 'puppet:///modules/solr/conf',
     require => File["${solr_home}/${core_name}"],
