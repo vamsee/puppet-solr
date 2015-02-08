@@ -1,5 +1,5 @@
 # the default path for puppet to look for executables
-Exec { path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ] }
+Exec { path => [ '/bin', '/sbin' , '/usr/bin', '/usr/sbin', '/usr/local/bin' ] }
 
 stage { 'first': }
 

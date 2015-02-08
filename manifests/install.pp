@@ -5,30 +5,40 @@
 # - Installs default jdk
 # - Installs jetty and extra libs
 #
+
 class solr::install {
 
-  package { 'default-jdk':
-    ensure  => present,
+  if ! defined(Package['default-jdk']) {
+      package { 'default-jdk':
+          ensure => present,
+      }
   }
 
-  package { 'jetty':
-    ensure  => present,
-    require => Package['default-jdk'],
+  if ! defined(Package['jetty']) {
+      package { 'jetty':
+          ensure => present,
+          require => Package['default-jdk'],
+      }
   }
 
-  package { 'libjetty-extra':
-    ensure  => present,
-    require => Package['jetty'],
+  if ! defined(Package['libjetty-extra']) {
+      package { 'libjetty-extra':
+          ensure => present,
+          require => Package['jetty'],
+      }
   }
 
-  package { 'wget':
-    ensure  => present,
+  if ! defined(Package['wget']) {
+      package { 'wget':
+          ensure => present,
+      }
   }
 
-  if defined(Package['curl']) == false {
-    package { 'curl':
-      ensure  => present,
-    }
+  if ! defined(Package['curl']) {
+      package { 'curl':
+          ensure => present,
+      }
   }
+
 }
 

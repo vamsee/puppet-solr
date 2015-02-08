@@ -62,7 +62,7 @@ describe 'solr::config' do
 
     it { should contain_exec('extract-solr')
         .with({
-                'path'      =>  '["/usr/bin", "/usr/sbin", "/bin"]',
+                'path'      =>  '["/bin", "/sbin", "/usr/bin", "/usr/sbin", "/usr/local/bin"]',
                 'command'   =>  'tar xvf solr-4.7.2.tgz',
                 'cwd'       =>  '/tmp',
                 'onlyif'    =>  'test -f /tmp/solr-4.7.2.tgz && test ! -d /tmp/solr-4.7.2',
@@ -72,7 +72,7 @@ describe 'solr::config' do
 
     it { should contain_exec('copy-solr')
         .with({
-                'path'      =>  '["/usr/bin", "/usr/sbin", "/bin"]',
+                 'path'      =>  '["/bin", "/sbin", "/usr/bin", "/usr/sbin", "/usr/local/bin"]',
                 'command'   =>  "jar xvf /tmp/solr-4.7.2/dist/solr-4.7.2.war; \
     cp /tmp/solr-4.7.2/example/lib/ext/*.jar WEB-INF/lib",
                 'cwd'       =>  '/usr/share/solr',
@@ -159,7 +159,7 @@ describe 'solr::config' do
 
     it { should contain_exec('extract-solr')
         .with({
-                'path'      =>  '["/usr/bin", "/usr/sbin", "/bin"]',
+                'path'      =>  '["/bin", "/sbin", "/usr/bin", "/usr/sbin", "/usr/local/bin"]',
                 'command'   =>  'tar xvf solr-5.6.2.tgz',
                 'cwd'       =>  '/tmp',
                 'onlyif'    =>  'test -f /tmp/solr-5.6.2.tgz && test ! -d /tmp/solr-5.6.2',
@@ -169,7 +169,7 @@ describe 'solr::config' do
 
     it { should contain_exec('copy-solr')
         .with({
-                'path'      =>  '["/usr/bin", "/usr/sbin", "/bin"]',
+                'path'      =>  '["/bin", "/sbin", "/usr/bin", "/usr/sbin", "/usr/local/bin"]',
                 'command'   =>  "jar xvf /tmp/solr-5.6.2/dist/solr-5.6.2.war; \
     cp /tmp/solr-5.6.2/example/lib/ext/*.jar WEB-INF/lib",
                 'cwd'       =>  '/usr/share/solr',
