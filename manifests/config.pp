@@ -25,9 +25,9 @@ class solr::config(
 
   #Copy the jetty config file
   file { '/etc/default/jetty':
-    ensure        => file,
-    source        => 'puppet:///modules/solr/jetty-default',
-    require       => Package['jetty'],
+    ensure  => file,
+    source  => 'puppet:///modules/solr/jetty-default',
+    require => Package['jetty'],
   }
 
   file { $solr_home:

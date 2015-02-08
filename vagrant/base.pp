@@ -7,14 +7,16 @@ stage { 'last': }
 
 Stage['first'] -> Stage['main'] -> Stage['last']
 
-class update_aptget {
+# lint:ignore:autoloader_layout
+class base {
   exec {'apt-get update && touch /tmp/apt-get-updated':
     unless => 'test -e /tmp/apt-get-updated'
   }
 }
+# lint:endignore
 
 # run apt-get update before anything else runs
-class {'update_aptget':
+class { 'base':
   stage => first,
 }
 
