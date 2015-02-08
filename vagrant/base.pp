@@ -7,13 +7,12 @@ stage { 'last': }
 
 Stage['first'] -> Stage['main'] -> Stage['last']
 
-# lint:ignore:autoloader_layout
+# Run basic bootstrap commands before setting up VM:
 class base {
   exec {'apt-get update && touch /tmp/apt-get-updated':
     unless => 'test -e /tmp/apt-get-updated'
   }
 }
-# lint:endignore
 
 # run apt-get update before anything else runs
 class { 'base':

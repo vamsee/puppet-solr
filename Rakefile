@@ -1,12 +1,18 @@
 require 'rake'
 require 'rspec/core/rake_task'
 require 'puppet-lint/tasks/puppet-lint'
-PuppetLint.configuration.ignore_paths = ["pkg/**/*.pp",
-                                         "templates/**/*.*",
-                                         "files/**/*.*",
-                                         "spec/**/*.*",
-                                         "vendor/**/*.*",
-                                         "vagrant/**/*.pp"]
+
+# See: https://github.com/rodjek/puppet-lint/issues/331
+Rake::Task[:lint].clear
+
+PuppetLint::RakeTask.new :lint do |config|
+  config.ignore_paths = ["pkg/**/*.pp",
+                         "templates/**/*.*",
+                         "files/**/*.*",
+                         "spec/**/*.*",
+                         "vendor/**/*.*",
+                         "vagrant/**/*.pp"]
+end
 
 RSpec::Core::RakeTask.new(:spec) do |t|
   t.pattern = FileList['spec/*/*_spec.rb'].exclude('spec/system/*_spec.rb')
