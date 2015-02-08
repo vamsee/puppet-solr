@@ -19,8 +19,8 @@ If you need multiple cores out of the box, you can run this:
 It's _**highly**_ recommended that you use a mirror like so:
 
     class { 'solr':
-      mirror        => 'http://apache.mesi.com.ar/lucene/solr',
-      version       => '4.7.2',
+      mirror        => 'http://apache.bytenet.in/lucene/solr',
+      version       => '4.10.3',
       cores         => ['development', 'staging', 'production'],
     }
 
@@ -34,8 +34,8 @@ use this to quickly test the module for yourself. Just cd into the directory and
 
     vagrant up
 
-The solr server maps to port 8080 by default, and vagrant maps this to port 8080 on host system also.
-So you should be able to see the solr server running at http://0.0.0.0:8080/solr. This module also has
+The jetty server maps to port 8983 by default, and vagrant maps this to port 8983 on host system also.
+So you should be able to see the solr server running at http://localhost:8983/solr. This module also has
 a good test suite, you can run the specs by simply typing:
 
     rake

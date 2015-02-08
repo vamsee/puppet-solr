@@ -27,13 +27,13 @@ describe file('/usr/share/solr') do
   it { should be_grouped_into 'jetty' }
 end
 
-describe file('/usr/share/solr/default') do
+describe file('/usr/share/solr/production') do
   it { should be_directory }
   it { should be_owned_by 'jetty' }
   it { should be_grouped_into 'jetty' }
 end
 
-describe file('/var/lib/solr/default') do
+describe file('/var/lib/solr/production') do
   it { should be_directory }
   it { should be_owned_by 'jetty' }
   it { should be_grouped_into 'jetty' }

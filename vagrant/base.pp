@@ -25,7 +25,7 @@ class { 'base':
 
 # With all options
 class { 'solr':
-  mirror  => 'http://apache.mesi.com.ar/lucene/solr',
-  version => '4.7.2',
+  mirror  => 'http://apache.bytenet.in/lucene/solr',
+  version => '4.10.3',
   cores   => ['development', 'staging', 'production'],
 }
