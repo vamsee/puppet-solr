@@ -13,7 +13,7 @@ PuppetLint::RakeTask.new :lint do |config|
                          "vendor/**/*.*",
                          "vagrant/**/*.pp"]
 
-  config.disable_checks = ["disable_autoloader_layout"]
+  config.disable_checks = ["autoloader_layout"]
 end
 
 RSpec::Core::RakeTask.new(:spec) do |t|
