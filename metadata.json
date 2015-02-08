@@ -8,6 +8,13 @@
   "project_page": "https://github.com/vamsee/puppet-solr",
   "issues_url": "https://github.com/vamsee/puppet-solr/issues",
   "description": "Configure and set up a multi-core solr instance",
+  "tags": ["solr", "apache"],
+  "operatingsystem_support": [
+    {
+    "operatingsystem": "Ubuntu",
+    "operatingsystemrelease": [ "12.04", "10.04" ]
+    }
+  ],
   "dependencies": [
 
   ]
