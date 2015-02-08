@@ -1,0 +1,14 @@
+{
+  "name": "vamsee-solr",
+  "version": "0.0.7",
+  "author": "vamsee",
+  "summary": "A puppet module for solr",
+  "license": "MIT",
+  "source": "git@github.com:vamsee/puppet-solr.git",
+  "project_page": "https://github.com/vamsee/puppet-solr",
+  "issues_url": "https://github.com/vamsee/puppet-solr/issues",
+  "description": "Configure and set up a multi-core solr instance",
+  "dependencies": [
+
+  ]
+}
