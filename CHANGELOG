@@ -1,12 +1,17 @@
-23 Sep 2012
+08 Feb 2015 - Release v0.0.7
 
-	* First release
+	* Merge a bunch of PRs, cleanups, updates
 
-06 Jan 2013
+25 Apr 2014 - Release v0.0.6
 
-	* Added missing files and templates, fixes #1
+	* Set the mirror to download from, clean ups, updates
 
-04 Sep 2013
+06 Sep 2013 - Release v0.0.5
+
+        * Small rewrite - download solr and setup webapp as forge
+          doesn't accept modules more than 20MB or so.
+
+04 Sep 2013 - Release v0.0.4
 
         * Update the solr install to the latest stable (4.4)
 
@@ -18,7 +23,10 @@
 
         * Added vagrant setup for quick testing of the module
 
-06 Sep 2013
+06 Jan 2013 - Release v0.0.3
 
-        * Small rewrite - download solr and setup webapp as forge
-          doesn't accept modules more than 20MB or so.
+	* Added missing files and templates, fixes #1
+
+23 Sep 2012
+
+	* First release
