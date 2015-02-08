@@ -73,7 +73,8 @@ describe 'solr::config' do
     it { should contain_exec('copy-solr')
         .with({
                 'path'      =>  '["/usr/bin", "/usr/sbin", "/bin"]',
-                'command'   =>  'jar xvf /tmp/solr-4.7.2/dist/solr-4.7.2.war; cp /tmp/solr-4.7.2/example/lib/ext/*.jar WEB-INF/lib',
+                'command'   =>  "jar xvf /tmp/solr-4.7.2/dist/solr-4.7.2.war; \
+    cp /tmp/solr-4.7.2/example/lib/ext/*.jar WEB-INF/lib",
                 'cwd'       =>  '/usr/share/solr',
                 'onlyif'    =>  'test ! -d /usr/share/solr/WEB-INF',
                 'require'   =>  'Exec[extract-solr]',
@@ -169,7 +170,8 @@ describe 'solr::config' do
     it { should contain_exec('copy-solr')
         .with({
                 'path'      =>  '["/usr/bin", "/usr/sbin", "/bin"]',
-                'command'   =>  'jar xvf /tmp/solr-5.6.2/dist/solr-5.6.2.war; cp /tmp/solr-5.6.2/example/lib/ext/*.jar WEB-INF/lib',
+                'command'   =>  "jar xvf /tmp/solr-5.6.2/dist/solr-5.6.2.war; \
+    cp /tmp/solr-5.6.2/example/lib/ext/*.jar WEB-INF/lib",
                 'cwd'       =>  '/usr/share/solr',
                 'onlyif'    =>  'test ! -d /usr/share/solr/WEB-INF',
                 'require'   =>  'Exec[extract-solr]',

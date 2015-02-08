@@ -25,9 +25,9 @@ class solr::config(
 
   #Copy the jetty config file
   file { '/etc/default/jetty':
-    ensure  => file,
-    source  => 'puppet:///modules/solr/jetty-default',
-    require => Package['jetty'],
+    ensure        => file,
+    source        => 'puppet:///modules/solr/jetty-default',
+    require       => Package['jetty'],
   }
 
   file { $solr_home:
@@ -59,7 +59,8 @@ class solr::config(
   # have to copy logging jars separately from solr 4.3 onwards
   exec { 'copy-solr':
     path    =>  ['/usr/bin', '/usr/sbin', '/bin'],
-    command =>  "jar xvf /tmp/solr-${version}/dist/solr-${version}.war; cp /tmp/solr-${version}/example/lib/ext/*.jar WEB-INF/lib",
+    command =>  "jar xvf /tmp/solr-${version}/dist/solr-${version}.war; \
+    cp /tmp/solr-${version}/example/lib/ext/*.jar WEB-INF/lib",
     cwd     =>  $solr_home,
     onlyif  =>  "test ! -d ${solr_home}/WEB-INF",
     require =>  Exec['extract-solr'],
