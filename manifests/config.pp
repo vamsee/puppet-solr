@@ -18,6 +18,7 @@ class solr::config(
   $mirror         = $solr::params::mirror_site,
   $jetty_home     = $solr::params::jetty_home,
   $solr_home      = $solr::params::solr_home,
+  $dist_root      = $solr::params::dist_root,
   ) inherits solr::params {
 
   $dl_name        = "solr-${version}.tgz"
@@ -37,13 +38,13 @@ class solr::config(
     require => Package['jetty'],
   }
 
-  # download only if WEB-INF is not present and tgz file is not in /tmp:
+  # download only if WEB-INF is not present and tgz file is not in $dist_root:
   exec { 'solr-download':
     path    => [ '/bin', '/sbin' , '/usr/bin', '/usr/sbin', '/usr/local/bin' ],
     command =>  "wget ${download_url}",
-    cwd     =>  '/tmp',
-    creates =>  "/tmp/${dl_name}",
-    onlyif  =>  "test ! -d ${solr_home}/WEB-INF && test ! -f /tmp/${dl_name}",
+    cwd     =>  "${dist_root}",
+    creates =>  "${dist_root}/${dl_name}",
+    onlyif  =>  "test ! -d ${solr_home}/WEB-INF && test ! -f ${dist_root}/${dl_name}",
     timeout =>  0,
     require => File[$solr_home],
   }
@@ -51,16 +52,16 @@ class solr::config(
   exec { 'extract-solr':
     path    => [ '/bin', '/sbin' , '/usr/bin', '/usr/sbin', '/usr/local/bin' ],
     command =>  "tar xvf ${dl_name}",
-    cwd     =>  '/tmp',
-    onlyif  =>  "test -f /tmp/${dl_name} && test ! -d /tmp/solr-${version}",
+    cwd     =>  "${dist_root}",
+    onlyif  =>  "test -f ${dist_root}/${dl_name} && test ! -d ${dist_root}/solr-${version}",
     require =>  Exec['solr-download'],
   }
 
   # have to copy logging jars separately from solr 4.3 onwards
   exec { 'copy-solr':
     path    => [ '/bin', '/sbin' , '/usr/bin', '/usr/sbin', '/usr/local/bin' ],
-    command =>  "jar xvf /tmp/solr-${version}/dist/solr-${version}.war; \
-    cp /tmp/solr-${version}/example/lib/ext/*.jar WEB-INF/lib",
+    command =>  "jar xvf ${dist_root}/solr-${version}/dist/solr-${version}.war; \
+    cp ${dist_root}/solr-${version}/example/lib/ext/*.jar WEB-INF/lib",
     cwd     =>  $solr_home,
     onlyif  =>  "test ! -d ${solr_home}/WEB-INF",
     require =>  Exec['extract-solr'],
