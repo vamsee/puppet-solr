@@ -42,7 +42,7 @@ class solr::config(
   exec { 'solr-download':
     path    => [ '/bin', '/sbin' , '/usr/bin', '/usr/sbin', '/usr/local/bin' ],
     command =>  "wget ${download_url}",
-    cwd     =>  "${dist_root}",
+    cwd     =>  $dist_root,
     creates =>  "${dist_root}/${dl_name}",
     onlyif  =>  "test ! -d ${solr_home}/WEB-INF && test ! -f ${dist_root}/${dl_name}",
     timeout =>  0,
@@ -52,7 +52,7 @@ class solr::config(
   exec { 'extract-solr':
     path    => [ '/bin', '/sbin' , '/usr/bin', '/usr/sbin', '/usr/local/bin' ],
     command =>  "tar xvf ${dl_name}",
-    cwd     =>  "${dist_root}",
+    cwd     =>  $dist_root,
     onlyif  =>  "test -f ${dist_root}/${dl_name} && test ! -d ${dist_root}/solr-${version}",
     require =>  Exec['solr-download'],
   }
