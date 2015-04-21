@@ -13,6 +13,7 @@ class solr::params {
   $mirror_site   = 'http://www.us.apache.org/dist/lucene/solr'
   $data_dir      = '/var/lib/solr'
   $cores         = ['default']
+  $dist_root     = '/tmp'
 
 }
 

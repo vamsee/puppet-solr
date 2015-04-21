@@ -40,6 +40,7 @@ class solr (
   $cores      = 'UNSET',
   $version    = 'UNSET',
   $mirror     = 'UNSET',
+  $dist_root  = 'UNSET',
 ) {
 
   include solr::params
@@ -59,11 +60,17 @@ class solr (
     default   => $mirror,
   }
 
+  $my_dist_root = $dist_root ? {
+    'UNSET'   => $::solr::params::dist_root,
+    default   => $dist_root,
+  }
+
   class {'solr::install': } ->
   class {'solr::config':
-    cores   => $my_cores,
-    version => $my_version,
-    mirror  => $my_mirror,
+    cores     => $my_cores,
+    version   => $my_version,
+    mirror    => $my_mirror,
+    dist_root => $my_dist_root,
   } ~>
   class {'solr::service': } ->
   Class['solr']
