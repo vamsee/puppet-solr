@@ -92,9 +92,10 @@ describe 'solr::config' do
   context "when params are passed" do
 
     let(:params) { {
-        :cores    => ['dev', 'prod'],
-        :version  => '5.6.2',
-        :mirror   => 'http://some-random-site.us',
+        :cores     => ['dev', 'prod'],
+        :version   => '5.6.2',
+        :mirror    => 'http://some-random-site.us',
+        :dist_root => '/opt/tmpdata',
     } }
 
     it { should contain_file('/etc/default/jetty')
@@ -149,9 +150,9 @@ describe 'solr::config' do
     it { should contain_exec('solr-download')
         .with({
                 'command'   =>  'wget http://some-random-site.us/5.6.2/solr-5.6.2.tgz',
-                'cwd'       =>  '/tmp',
-                'creates'   =>  '/tmp/solr-5.6.2.tgz',
-                'onlyif'    =>  'test ! -d /usr/share/solr/WEB-INF && test ! -f /tmp/solr-5.6.2.tgz',
+                'cwd'       =>  '/opt/tmpdata',
+                'creates'   =>  '/opt/tmpdata/solr-5.6.2.tgz',
+                'onlyif'    =>  'test ! -d /usr/share/solr/WEB-INF && test ! -f /opt/tmpdata/solr-5.6.2.tgz',
                 'timeout'   =>  0,
                 'require'   =>  'File[/usr/share/solr]'
               })
@@ -161,8 +162,8 @@ describe 'solr::config' do
         .with({
                 'path'      =>  '["/bin", "/sbin", "/usr/bin", "/usr/sbin", "/usr/local/bin"]',
                 'command'   =>  'tar xvf solr-5.6.2.tgz',
-                'cwd'       =>  '/tmp',
-                'onlyif'    =>  'test -f /tmp/solr-5.6.2.tgz && test ! -d /tmp/solr-5.6.2',
+                'cwd'       =>  '/opt/tmpdata',
+                'onlyif'    =>  'test -f /opt/tmpdata/solr-5.6.2.tgz && test ! -d /opt/tmpdata/solr-5.6.2',
                 'require'   =>  'Exec[solr-download]',
               })
     }
@@ -170,8 +171,8 @@ describe 'solr::config' do
     it { should contain_exec('copy-solr')
         .with({
                 'path'      =>  '["/bin", "/sbin", "/usr/bin", "/usr/sbin", "/usr/local/bin"]',
-                'command'   =>  "jar xvf /tmp/solr-5.6.2/dist/solr-5.6.2.war; \
-    cp /tmp/solr-5.6.2/example/lib/ext/*.jar WEB-INF/lib",
+                'command'   =>  "jar xvf /opt/tmpdata/solr-5.6.2/dist/solr-5.6.2.war; \
+    cp /opt/tmpdata/solr-5.6.2/example/lib/ext/*.jar WEB-INF/lib",
                 'cwd'       =>  '/usr/share/solr',
                 'onlyif'    =>  'test ! -d /usr/share/solr/WEB-INF',
                 'require'   =>  'Exec[extract-solr]',

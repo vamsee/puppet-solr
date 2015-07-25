@@ -1,4 +1,4 @@
-# Solr Module  
+# Solr Module
 
 [![Build Status](https://travis-ci.org/vamsee/puppet-solr.png)](https://travis-ci.org/vamsee/puppet-solr)
 
@@ -20,7 +20,7 @@ It's _**highly**_ recommended that you use a mirror like so:
 
     class { 'solr':
       mirror        => 'http://apache.bytenet.in/lucene/solr',
-      version       => '4.10.3',
+      version       => '4.10.4',
       cores         => ['development', 'staging', 'production'],
     }
 

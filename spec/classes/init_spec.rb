@@ -13,6 +13,7 @@ describe 'solr' do
                 'cores'     => ['default'],
                 'version'   => '4.7.2',
                 'mirror'    => 'http://www.us.apache.org/dist/lucene/solr',
+                'dist_root' => '/tmp',
               })
     }
 
@@ -23,9 +24,10 @@ describe 'solr' do
   context "where params are passed" do
 
     let(:params) { {
-        :cores    => ['dev', 'prod'],
-        :version  => '5.6.2',
-        :mirror   => 'http://some-random-site.us',
+        :cores       => ['dev', 'prod'],
+        :version     => '5.6.2',
+        :mirror      => 'http://some-random-site.us',
+        :dist_root   => '/opt/tmpdata',
     } }
 
     it { should contain_solr__params }
@@ -37,6 +39,7 @@ describe 'solr' do
                 'cores'      => ['dev', 'prod'],
                 'version'    => '5.6.2',
                 'mirror'     => 'http://some-random-site.us',
+                'dist_root'  => '/opt/tmpdata'
               })
     }
 
