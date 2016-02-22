@@ -55,7 +55,7 @@ class solr (
     default   => $version,
   }
 
-  $my_mirror = $version ? {
+  $my_mirror = $mirror ? {
     'UNSET'   => $::solr::params::mirror_site,
     default   => $mirror,
   }
