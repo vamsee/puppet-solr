@@ -88,9 +88,16 @@ class solr::config(
     target  => $solr_home,
     require => File["${solr_home}/solr.xml"],
   }
-
-  solr::core { $cores:
-    require   =>  File["${jetty_home}/webapps/solr"],
+  if is_hash($cores) {
+    create_resources('::solr::core', $cores, {})
+  }
+  elsif is_array($cores) or is_string($cores) {
+    solr::core { $cores:
+      require   =>  File["${jetty_home}/webapps/solr"],
+    }
+  }
+  else {
+    fail('Parameter cores must be a hash, array or string')
   }
 }
 
