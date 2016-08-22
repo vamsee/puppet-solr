@@ -4,7 +4,7 @@ describe 'solr' do
 
   context "where params are not passed (default case)" do
 
-    it { should contain_solr__params }
+    it { should contain_class('solr::params') }
 
     it { should contain_class('solr::install') }
 
@@ -30,7 +30,7 @@ describe 'solr' do
         :dist_root   => '/opt/tmpdata',
     } }
 
-    it { should contain_solr__params }
+    it { should contain_class('solr::params') }
 
     it { should contain_class('solr::install') }
 
