@@ -1,8 +1,15 @@
 <solr persistent="true" sharedLib="lib">
  <cores adminPath="/admin/cores">
-  <% @cores.each do |core| %>
-    <core name="<%= core -%>" instanceDir="<%= core -%>"
+<% if @cores.is_a?(Hash)
+     @cores.each_pair do |core,value| -%>
+   <core name="<%= core -%>" instanceDir="<%= @solr_home -%>/<%= core -%>" dataDir="/var/lib/solr/<%=
+core -%>" />
+<%   end
+   else
+     [ @cores ].flatten.each do |core| -%>
+    <core name="<%= core -%>" instanceDir="<%= @solr_home -%>/<%= core -%>"
           dataDir="/var/lib/solr/<%= core -%>" />
-  <% end %>
+<%   end
+   end -%>
  </cores>
 </solr>
