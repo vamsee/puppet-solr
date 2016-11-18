@@ -21,7 +21,8 @@ define solr::core(
 ) {
   include solr::params
 
-  $solr_home  = $solr::params::solr_home
+  $solr_home  = $::solr::params::solr_home
+  $data_dir   = $::solr::params::data_dir
 
   file { "${solr_home}/${core_name}":
     ensure  => directory,
@@ -59,11 +60,25 @@ define solr::core(
 
   #Finally, create the data directory where solr stores
   #its indexes with proper directory ownership/permissions.
-  file { "/var/lib/solr/${core_name}":
+  file { "${data_dir}/${core_name}":
     ensure  => directory,
     owner   => 'jetty',
     group   => 'jetty',
     require => File["${solr_home}/${core_name}/conf"],
+  }
+
+  xml_fragment { "${core_name}_config":
+    path    => "${solr_home}/solr.xml",
+    xpath   => "/solr/cores/core[@name='${core_name}']",
+    content => {
+      attributes => {
+        name        => $core_name,
+        instanceDir => "${solr_home}/${core_name}",
+        dataDir     => "${data_dir}/${core_name}",
+      },
+    },
+    require => File["${data_dir}/${core_name}"],
+    notify  => Service[$::solr::params::jetty_service],
   }
 
 }

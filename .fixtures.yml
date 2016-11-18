@@ -1,5 +1,6 @@
 fixtures:
   repositories:
     stdlib: "git://github.com/puppetlabs/puppetlabs-stdlib"
+    xml_fragment: "git://github.com/Areson/xml_fragment"
   symlinks:
     solr: "#{source_dir}"

@@ -14,8 +14,8 @@ class solr::install {
       }
   }
 
-  if ! defined(Package['jetty']) {
-      package { 'jetty':
+  if ! defined(Package[$::solr::params::jetty_package]) {
+      package { $::solr::params::jetty_package:
           ensure  => present,
           require => Package['default-jdk'],
       }
@@ -24,7 +24,7 @@ class solr::install {
   if ! defined(Package['libjetty-extra']) {
       package { 'libjetty-extra':
           ensure  => present,
-          require => Package['jetty'],
+          require => Package[$::solr::params::jetty_package],
       }
   }
 
@@ -41,4 +41,3 @@ class solr::install {
   }
 
 }
-

@@ -7,13 +7,11 @@
 class solr::service {
 
   #restart after copying new config
-  service { 'jetty':
+  service { $::solr::params::jetty_service:
     ensure     => running,
     hasrestart => true,
     hasstatus  => true,
-    require    => Package['jetty'],
+    require    => Package[$::solr::params::jetty_package],
   }
 
 }
-
-
