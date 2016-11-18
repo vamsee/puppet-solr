@@ -16,7 +16,7 @@ class solr::params {
 
   case $::operatingsystem {
     'Debian': {
-      case $::facts['os']['release']['major'] {
+      case $::operatingsystemmajrelease {
         '8': {
           $jetty_package = 'jetty8'
           $jetty_service = 'jetty8'
