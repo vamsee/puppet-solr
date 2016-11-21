@@ -2,6 +2,14 @@ require 'spec_helper'
 
 describe 'solr' do
 
+  let :facts do
+    {
+      :osfamily => 'Debian',
+      :operatingsystem => 'Ubuntu',
+      :operatingsystemrelease => '14.04',
+    }
+  end
+  
   context "where params are not passed (default case)" do
 
     it { should contain_class('solr::params') }

@@ -2,6 +2,14 @@ require 'spec_helper'
 
 describe 'solr::config' do
 
+  let :facts do
+    {
+      :osfamily => 'Debian',
+      :operatingsystem => 'Ubuntu',
+      :operatingsystemrelease => '14.04',
+    }
+  end
+
   context "when params aren't passed - default case" do
 
     it { should contain_file('/etc/default/jetty')
@@ -41,11 +49,20 @@ describe 'solr::config' do
               })
     }
 
+    it { should contain_file('/usr/share/jetty/webapps')
+        .with({
+                'ensure'    => 'directory',
+                'owner'     => 'jetty',
+                'group'     => 'jetty',
+                'mode'      => '0700',
+                'require'   => 'File[/usr/share/solr/solr.xml]',
+              })
+    }
     it { should contain_file('/usr/share/jetty/webapps/solr')
         .with({
                 'ensure'    => 'link',
                 'target'    => '/usr/share/solr',
-                'require'   => 'File[/usr/share/solr/solr.xml]',
+                'require'   => 'File[/usr/share/jetty/webapps]',
               })
     }
 
@@ -139,11 +156,20 @@ describe 'solr::config' do
         .with_content(/\/var\/lib\/solr\/dev/)
     }
 
+    it { should contain_file('/usr/share/jetty/webapps')
+        .with({
+                'ensure'    => 'directory',
+                'owner'     => 'jetty',
+                'group'     => 'jetty',
+                'mode'      => '0700',
+                'require'   => 'File[/usr/share/solr/solr.xml]',
+              })
+    }
     it { should contain_file('/usr/share/jetty/webapps/solr')
         .with({
                 'ensure'    => 'link',
                 'target'    => '/usr/share/solr',
-                'require'   => 'File[/usr/share/solr/solr.xml]',
+                'require'   => 'File[/usr/share/jetty/webapps]',
               })
     }
 

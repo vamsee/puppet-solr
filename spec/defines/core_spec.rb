@@ -1,6 +1,14 @@
 require 'spec_helper'
 
 describe 'solr::core', :type => :define do
+  let :facts do
+    {
+      :osfamily => 'Debian',
+      :operatingsystem => 'Ubuntu',
+      :operatingsystemrelease => '14.04',
+    }
+  end
+
   context 'default behaviour' do
     let(:title) { 'default' }
 
@@ -48,4 +56,3 @@ describe 'solr::core', :type => :define do
   end
 
 end
-
