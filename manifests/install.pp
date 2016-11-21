@@ -6,7 +6,10 @@
 # - Installs jetty and extra libs
 #
 
-class solr::install {
+class solr::install (
+  $jetty_package = $::solr::params::jetty_package
+  ) inherits ::solr::params
+{
 
   if ! defined(Package['default-jdk']) {
       package { 'default-jdk':
@@ -14,8 +17,8 @@ class solr::install {
       }
   }
 
-  if ! defined(Package[$::solr::params::jetty_package]) {
-      package { $::solr::params::jetty_package:
+  if ! defined(Package[$jetty_package]) {
+      package { $jetty_package:
           ensure  => present,
           require => Package['default-jdk'],
       }
@@ -24,7 +27,7 @@ class solr::install {
   if ! defined(Package['libjetty-extra']) {
       package { 'libjetty-extra':
           ensure  => present,
-          require => Package[$::solr::params::jetty_package],
+          require => Package[$jetty_package],
       }
   }
 

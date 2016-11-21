@@ -16,6 +16,8 @@ class solr::config(
   $cores          = $solr::params::cores,
   $version        = $solr::params::solr_version,
   $mirror         = $solr::params::mirror_site,
+  $jetty_package  = $solr::params::jetty_package,
+  $jetty_service  = $solr::params::jetty_service,
   $jetty_home     = $solr::params::jetty_home,
   $solr_home      = $solr::params::solr_home,
   $dist_root      = $solr::params::dist_root,
@@ -25,17 +27,17 @@ class solr::config(
   $download_url   = "${mirror}/${version}/${dl_name}"
 
   #Copy the jetty config file
-  file { "/etc/default/${::solr::params::jetty_service}":
+  file { "/etc/default/${jetty_service}":
     ensure  => file,
     source  => 'puppet:///modules/solr/jetty-default',
-    require => Package[$::solr::params::jetty_package],
+    require => Package[$jetty_package],
   }
 
   file { $solr_home:
     ensure  => directory,
     owner   => 'jetty',
     group   => 'jetty',
-    require => Package[$::solr::params::jetty_package],
+    require => Package[$jetty_package],
   }
 
   # download only if WEB-INF is not present and tgz file is not in $dist_root:
@@ -72,7 +74,7 @@ class solr::config(
     owner   => 'jetty',
     group   => 'jetty',
     mode    => '0700',
-    require => Package[$::solr::params::jetty_package],
+    require => Package[$jetty_package],
   }
 
   file { "${solr_home}/solr.xml":
@@ -80,7 +82,7 @@ class solr::config(
     owner   => 'jetty',
     group   => 'jetty',
     content => template('solr/solr.xml.erb'),
-    require => File["/etc/default/${::solr::params::jetty_service}"],
+    require => File["/etc/default/${jetty_service}"],
   }
 
   file { "${jetty_home}/webapps":
