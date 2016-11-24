@@ -37,13 +37,18 @@
 #
 
 class solr (
-  $cores      = 'UNSET',
-  $version    = 'UNSET',
-  $mirror     = 'UNSET',
-  $dist_root  = 'UNSET',
+  $listen_address = $::solr::params::listen_address,
+  $listen_port    = $::solr::params::listen_port,
+  $cores          = 'UNSET',
+  $version        = 'UNSET',
+  $mirror         = 'UNSET',
+  $dist_root      = 'UNSET',
 ) {
 
   include solr::params
+
+  validate_ip_address($listen_address)
+  validate_integer($listen_port)
 
   $my_cores = $cores ? {
     'UNSET'   => $::solr::params::cores,
@@ -67,10 +72,12 @@ class solr (
 
   class {'solr::install': } ->
   class {'solr::config':
-    cores     => $my_cores,
-    version   => $my_version,
-    mirror    => $my_mirror,
-    dist_root => $my_dist_root,
+    listen_address => $listen_address,
+    listen_port    => $listen_port,
+    cores          => $my_cores,
+    version        => $my_version,
+    mirror         => $my_mirror,
+    dist_root      => $my_dist_root,
   } ~>
   class {'solr::service': } ->
   Class['solr']

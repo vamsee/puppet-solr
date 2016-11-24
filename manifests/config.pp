@@ -16,9 +16,16 @@ class solr::config(
   $cores          = $solr::params::cores,
   $version        = $solr::params::solr_version,
   $mirror         = $solr::params::mirror_site,
+
+  $listen_address = $solr::params::listen_address,
+  $listen_port    = $solr::params::listen_port,
+
   $jetty_package  = $solr::params::jetty_package,
   $jetty_service  = $solr::params::jetty_service,
   $jetty_home     = $solr::params::jetty_home,
+  $jetty_user     = $solr::params::jetty_user,
+  $jetty_group    = $solr::params::jetty_group,
+
   $solr_home      = $solr::params::solr_home,
   $dist_root      = $solr::params::dist_root,
   ) inherits solr::params {
@@ -29,14 +36,14 @@ class solr::config(
   #Copy the jetty config file
   file { "/etc/default/${jetty_service}":
     ensure  => file,
-    source  => 'puppet:///modules/solr/jetty-default',
+    content => template('solr/jetty-default.erb'),
     require => Package[$jetty_package],
   }
 
   file { $solr_home:
     ensure  => directory,
-    owner   => 'jetty',
-    group   => 'jetty',
+    owner   => $jetty_user,
+    group   => $jetty_group,
     require => Package[$jetty_package],
   }
 
@@ -71,24 +78,24 @@ class solr::config(
 
   file { '/var/lib/solr':
     ensure  => directory,
-    owner   => 'jetty',
-    group   => 'jetty',
+    owner   => $jetty_user,
+    group   => $jetty_group,
     mode    => '0700',
     require => Package[$jetty_package],
   }
 
   file { "${solr_home}/solr.xml":
     ensure  => 'file',
-    owner   => 'jetty',
-    group   => 'jetty',
+    owner   => $jetty_user,
+    group   => $jetty_group,
     content => template('solr/solr.xml.erb'),
     require => File["/etc/default/${jetty_service}"],
   }
 
   file { "${jetty_home}/webapps":
     ensure  => 'directory',
-    owner   => 'jetty',
-    group   => 'jetty',
+    owner   => $jetty_user,
+    group   => $jetty_group,
     mode    => '0700',
     require => File["${solr_home}/solr.xml"],
   }

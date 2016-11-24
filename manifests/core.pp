@@ -24,10 +24,14 @@ define solr::core(
   $solr_home  = $::solr::params::solr_home
   $data_dir   = $::solr::params::data_dir
 
+  $jetty_service = $::solr::params::jetty_service
+  $jetty_user = $::solr::params::jetty_user
+  $jetty_group = $::solr::params::jetty_group
+
   file { "${solr_home}/${core_name}":
     ensure  => directory,
-    owner   => 'jetty',
-    group   => 'jetty',
+    owner   => $jetty_user,
+    group   => $jetty_group,
     require => File[$solr_home],
   }
 
@@ -36,19 +40,20 @@ define solr::core(
       #Copy its config over
       file { "${solr_home}/${core_name}/conf":
         ensure  => directory,
-        owner   => 'jetty',
-        group   => 'jetty',
+        owner   => $jetty_user,
+        group   => $jetty_group,
         recurse => true,
+        replace => false,
         source  => $config_source,
         require => File["${solr_home}/${core_name}"],
-      }
+        }
     }
     'link': {
       # Link the config directory
       file {"${solr_home}/${core_name}/conf":
         ensure  => 'link',
-        owner   => 'jetty',
-        group   => 'jetty',
+        owner   => $jetty_user,
+        group   => $jetty_group,
         target  => $config_source,
         require => File["${solr_home}/${core_name}"],
       }
@@ -62,8 +67,8 @@ define solr::core(
   #its indexes with proper directory ownership/permissions.
   file { "${data_dir}/${core_name}":
     ensure  => directory,
-    owner   => 'jetty',
-    group   => 'jetty',
+    owner   => $jetty_user,
+    group   => $jetty_group,
     require => File["${solr_home}/${core_name}/conf"],
   }
 
@@ -78,7 +83,7 @@ define solr::core(
       },
     },
     require => File["${data_dir}/${core_name}"],
-    notify  => Service[$::solr::params::jetty_service],
+    notify  => Service[$jetty_service],
   }
 
 }
