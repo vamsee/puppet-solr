@@ -39,45 +39,25 @@
 class solr (
   $listen_address = $::solr::params::listen_address,
   $listen_port    = $::solr::params::listen_port,
-  $cores          = 'UNSET',
-  $version        = 'UNSET',
-  $mirror         = 'UNSET',
-  $dist_root      = 'UNSET',
-) {
+  $cores          = $::solr::params::cores,
+  $version        = $::solr::params::solr_version,
+  $mirror         = $::solr::params::mirror_site,
+  $dist_root      = $::solr::params::dist_root,
+) inherits ::solr::params {
 
   include solr::params
 
   validate_ip_address($listen_address)
   validate_integer($listen_port)
 
-  $my_cores = $cores ? {
-    'UNSET'   => $::solr::params::cores,
-    default   => $cores,
-  }
-
-  $my_version = $version ? {
-    'UNSET'   => $::solr::params::solr_version,
-    default   => $version,
-  }
-
-  $my_mirror = $mirror ? {
-    'UNSET'   => $::solr::params::mirror_site,
-    default   => $mirror,
-  }
-
-  $my_dist_root = $dist_root ? {
-    'UNSET'   => $::solr::params::dist_root,
-    default   => $dist_root,
-  }
-
   class {'solr::install': } ->
   class {'solr::config':
     listen_address => $listen_address,
     listen_port    => $listen_port,
-    cores          => $my_cores,
-    version        => $my_version,
-    mirror         => $my_mirror,
-    dist_root      => $my_dist_root,
+    cores          => $cores,
+    version        => $version,
+    mirror         => $mirror,
+    dist_root      => $dist_root,
   } ~>
   class {'solr::service': } ->
   Class['solr']

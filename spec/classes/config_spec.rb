@@ -15,7 +15,6 @@ describe 'solr::config' do
     it { should contain_file('/etc/default/jetty')
         .with({
                 'ensure'    =>    'file',
-                'source'    =>    'puppet:///modules/solr/jetty-default',
                 'require'   =>    'Package[jetty]',
               })
     }
@@ -109,18 +108,19 @@ describe 'solr::config' do
   context "when params are passed" do
 
     let(:params) { {
-        :cores     => ['dev', 'prod'],
-        :version   => '5.6.2',
-        :mirror    => 'http://some-random-site.us',
-        :dist_root => '/opt/tmpdata',
+        :listen_address => '127.0.0.1',
+        :listen_port    => 1234,
+        :cores          => ['dev', 'prod'],
+        :version        => '5.6.2',
+        :mirror         => 'http://some-random-site.us',
+        :dist_root      => '/opt/tmpdata',
     } }
 
     it { should contain_file('/etc/default/jetty')
-        .with({
-                'ensure'    =>    'file',
-                'source'    =>    'puppet:///modules/solr/jetty-default',
-                'require'   =>    'Package[jetty]',
-              })
+      .with({
+              'ensure'    =>    'file',
+              'require'   =>    'Package[jetty]',
+            })
     }
 
     it { should contain_file('/usr/share/solr')
