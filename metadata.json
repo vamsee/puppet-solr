@@ -16,6 +16,7 @@
     }
   ],
   "dependencies": [
-    { "name": "puppetlabs/stdlib" }
+    { "name": "puppetlabs/stdlib" },
+    { "name": "puppetlabs/java","version_requirement":">= 1.6.0" }
   ]
 }

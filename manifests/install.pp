@@ -14,18 +14,29 @@ class solr::install {
       }
   }
 
-  if ! defined(Package['jetty']) {
-      package { 'jetty':
-          ensure  => present,
-          require => Package['default-jdk'],
-      }
-  }
+  if versioncmp($::solr_version, '5.0') < 0 {
 
-  if ! defined(Package['libjetty-extra']) {
-      package { 'libjetty-extra':
-          ensure  => present,
-          require => Package['jetty'],
-      }
+    if ! defined(Package['jetty']) {
+        package { 'jetty':
+            ensure  => present,
+            require => Package['default-jdk'],
+        }
+    }
+
+    if ! defined(Package['libjetty-extra']) {
+        package { 'libjetty-extra':
+            ensure  => present,
+            require => Package['jetty'],
+        }
+    }
+
+  } else {
+    include java
+    java::oracle { 'jdk8' :
+        ensure  => 'present',
+        version => '8',
+        java_se => 'jdk',
+    }
   }
 
   if ! defined(Package['wget']) {
