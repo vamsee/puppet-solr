@@ -6,14 +6,15 @@
 #
 class solr::service {
 
-  #restart after copying new config
-  service { 'jetty':
-    ensure     => running,
-    hasrestart => true,
-    hasstatus  => true,
-    require    => Package['jetty'],
+  if versioncmp($::solr::version, '5.0') < 0 {
+    #restart after copying new config
+    service { 'jetty':
+      ensure     => running,
+      hasrestart => true,
+      hasstatus  => true,
+      require    => Package['jetty'],
+    }
   }
-
 }
 
 
