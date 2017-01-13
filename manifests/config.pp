@@ -124,10 +124,10 @@ class solr::config(
     }
 
     exec { 'install-solr':
-      path    => [ '/bin', '/sbin' , '/usr/bin', '/usr/sbin', '/usr/local/bin' ],
-      command =>  "./install_solr_service.sh ${dist_root}/${dl_name} -d ${data_dir}",
-      cwd     =>  "$dist_root/bin",
-      onlyif  =>  "test ! -d ${data_dir}",
+      path    => [ '/bin', '/sbin' , '/usr/bin', '/usr/sbin', '/usr/local/bin', "${dist_root}/solr-${version}/bin" ],
+      command =>  "install_solr_service.sh ${dist_root}/${dl_name} -d ${data_dir}",
+      cwd     =>  "$dist_root/solr-${version}",
+      onlyif  =>  "test ! -d /opt/solr-${version}",
       require =>  Exec['extract-solr'],
     }
   }
