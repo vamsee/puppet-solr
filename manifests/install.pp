@@ -14,7 +14,7 @@ class solr::install {
       }
   }
 
-  if versioncmp($::solr_version, '5.0') < 0 {
+  if versioncmp($::solr::version, '5.0') < 0 {
 
     if ! defined(Package['jetty']) {
         package { 'jetty':

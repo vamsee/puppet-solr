@@ -24,7 +24,7 @@ class solr::config(
   $dl_name        = "solr-${version}.tgz"
   $download_url   = "${mirror}/${version}/${dl_name}"
 
-  if versioncmp($::solr_version, '5.0') < 0 {
+  if versioncmp($::solr::version, '5.0') < 0 {
 
     #Copy the jetty config file
     file { '/etc/default/jetty':
