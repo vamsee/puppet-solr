@@ -22,12 +22,15 @@ class solr::config(
   ) inherits solr::params {
 
   if versioncmp($::solr::version, '4.1') < 0 {
-    $dl_name        = "apache-solr-${version}.tgz"
-    $download_url   = "${mirror}/${version}/${dl_name}"
+    $solr_name      = "apache-solr-${version}"
   } else {
-    $dl_name        = "solr-${version}.tgz"
-    $download_url   = "${mirror}/${version}/${dl_name}"
+    $solr_name      = "solr-${version}"
   }
+  $dl_name        = "${solr_name}.tgz"
+  $download_url   = "${mirror}/${version}/${dl_name}"
+
+  $jsp_jar = "jsp-2.1-6.0.2.jar"
+  $jsp_url = "http://maven.ibiblio.org/maven2/jetty/jsp/2.1-6.0.2/${jsp_jar}"
 
   # This works for versions < 5.0 
   if versioncmp($::solr::version, '5.0') < 0 {
@@ -61,19 +64,34 @@ class solr::config(
       path    => [ '/bin', '/sbin' , '/usr/bin', '/usr/sbin', '/usr/local/bin' ],
       command =>  "tar xvf ${dl_name}",
       cwd     =>  $dist_root,
-      onlyif  =>  "test -f ${dist_root}/${dl_name} && test ! -d ${dist_root}/solr-${version}",
+      onlyif  =>  "test -f ${dist_root}/${dl_name} && test ! -d ${dist_root}/${solr_name}",
       require =>  Exec['solr-download'],
     }
 
     # have to copy logging jars separately from solr 4.3 onwards
+    exec { 'copy-solr':
+      path    => [ '/bin', '/sbin' , '/usr/bin', '/usr/sbin', '/usr/local/bin' ],
+      command =>  "jar xvf ${dist_root}/${solr_name}/dist/${solr_name}.war",
+      cwd     =>  $solr_home,
+      onlyif  =>  "test ! -d ${solr_home}/WEB-INF",
+      require =>  Exec['extract-solr'],
+    }
     if versioncmp($::solr::version, '4.3') >= 0 {
-      exec { 'copy-solr':
+      exec { 'copy-solr-extra':
         path    => [ '/bin', '/sbin' , '/usr/bin', '/usr/sbin', '/usr/local/bin' ],
-        command =>  "jar xvf ${dist_root}/solr-${version}/dist/solr-${version}.war; \
-        cp ${dist_root}/solr-${version}/example/lib/ext/*.jar WEB-INF/lib",
+        command =>  "cp ${dist_root}/${solr_name}/example/lib/ext/*.jar WEB-INF/lib",
         cwd     =>  $solr_home,
         onlyif  =>  "test ! -d ${solr_home}/WEB-INF",
         require =>  Exec['extract-solr'],
+      }
+    }
+    if versioncmp($::solr::version, '3.6.2') == 0 {
+      exec { 'download-jsp':
+        path    => [ '/bin', '/sbin' , '/usr/bin', '/usr/sbin', '/usr/local/bin' ],
+        command =>  "wget ${jsp_url}",
+        cwd     =>  "${jetty_home}/lib",
+        creates =>  "${jetty_home}/lib/${jsp_jar}",
+        timeout =>  0,
       }
     }
 
@@ -127,15 +145,15 @@ class solr::config(
       path    => [ '/bin', '/sbin' , '/usr/bin', '/usr/sbin', '/usr/local/bin' ],
       command =>  "tar xvf ${dl_name}",
       cwd     =>  $dist_root,
-      onlyif  =>  "test -f ${dist_root}/${dl_name} && test ! -d ${dist_root}/solr-${version}",
+      onlyif  =>  "test -f ${dist_root}/${dl_name} && test ! -d ${dist_root}/${solr_name}",
       require =>  Exec['solr-download'],
     }
 
     exec { 'install-solr':
-      path    => [ '/bin', '/sbin' , '/usr/bin', '/usr/sbin', '/usr/local/bin', "${dist_root}/solr-${version}/bin" ],
+      path    => [ '/bin', '/sbin' , '/usr/bin', '/usr/sbin', '/usr/local/bin', "${dist_root}/${solr_name}/bin" ],
       command =>  "install_solr_service.sh ${dist_root}/${dl_name} -d ${data_dir}",
-      cwd     =>  "$dist_root/solr-${version}",
-      onlyif  =>  "test ! -d /opt/solr-${version}",
+      cwd     =>  "$dist_root/${solr_name}",
+      onlyif  =>  "test ! -d /opt/${solr_name}",
       require =>  Exec['extract-solr'],
     }
   }
