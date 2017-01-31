@@ -21,9 +21,15 @@ class solr::config(
   $dist_root      = $solr::params::dist_root,
   ) inherits solr::params {
 
-  $dl_name        = "solr-${version}.tgz"
-  $download_url   = "${mirror}/${version}/${dl_name}"
+  if versioncmp($::solr::version, '4.1') < 0 {
+    $dl_name        = "apache-solr-${version}.tgz"
+    $download_url   = "${mirror}/${version}/${dl_name}"
+  } else {
+    $dl_name        = "solr-${version}.tgz"
+    $download_url   = "${mirror}/${version}/${dl_name}"
+  }
 
+  # This works for versions < 5.0 
   if versioncmp($::solr::version, '5.0') < 0 {
 
     #Copy the jetty config file
@@ -60,13 +66,15 @@ class solr::config(
     }
 
     # have to copy logging jars separately from solr 4.3 onwards
-    exec { 'copy-solr':
-      path    => [ '/bin', '/sbin' , '/usr/bin', '/usr/sbin', '/usr/local/bin' ],
-      command =>  "jar xvf ${dist_root}/solr-${version}/dist/solr-${version}.war; \
-      cp ${dist_root}/solr-${version}/example/lib/ext/*.jar WEB-INF/lib",
-      cwd     =>  $solr_home,
-      onlyif  =>  "test ! -d ${solr_home}/WEB-INF",
-      require =>  Exec['extract-solr'],
+    if versioncmp($::solr::version, '4.3') >= 0 {
+      exec { 'copy-solr':
+        path    => [ '/bin', '/sbin' , '/usr/bin', '/usr/sbin', '/usr/local/bin' ],
+        command =>  "jar xvf ${dist_root}/solr-${version}/dist/solr-${version}.war; \
+        cp ${dist_root}/solr-${version}/example/lib/ext/*.jar WEB-INF/lib",
+        cwd     =>  $solr_home,
+        onlyif  =>  "test ! -d ${solr_home}/WEB-INF",
+        require =>  Exec['extract-solr'],
+      }
     }
 
     file { '/var/lib/solr':
