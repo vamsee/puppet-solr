@@ -7,7 +7,11 @@
 #
 class solr::params {
 
-  $jetty_home    = '/usr/share/jetty'
+  if $::lsbdistcodename == 'trusty' {
+    $jetty_home    = '/usr/share/jetty'
+  } else {
+    $jetty_home    = '/usr/share/jetty8'
+  }
   $solr_home     = '/usr/share/solr'
   $solr_version  = '4.7.2'
   $mirror_site   = 'http://www.us.apache.org/dist/lucene/solr'
