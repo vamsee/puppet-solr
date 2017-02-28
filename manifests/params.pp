@@ -18,6 +18,9 @@ class solr::params {
   $data_dir      = '/var/lib/solr'
   $cores         = ['default']
   $dist_root     = '/tmp'
-
+  if $::lsbdistcodename == 'trusty' {
+    $jetty_package = 'jetty'
+  } else {
+    $jetty_package = 'jetty8'
+  }
 }
-
