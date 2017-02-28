@@ -36,6 +36,13 @@ class solr::config(
   # This works for versions < 5.0 
   if versioncmp($::solr::version, '5.0') < 0 {
 
+    if $::lsbdistcodename == 'trusty' {
+      $jdk_dirs = '/usr/lib/jvm/default-java /usr/lib/jvm/java-6-sun'
+    }
+    if $::lsbdistcodename == 'xenial' {
+      $jdk_dirs = '/usr/lib/jvm/java-7-openjdk-amd64'
+    }
+
     #Copy the jetty config file
     file { "/etc/default/${jetty_package}":
       ensure  => file,
