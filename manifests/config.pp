@@ -36,14 +36,14 @@ class solr::config(
   if versioncmp($::solr::version, '5.0') < 0 {
 
     #Copy the jetty config file
-    if $::lsbdistcodename == 'trusty': {
+    if $::lsbdistcodename == 'trusty' {
       file { '/etc/default/jetty':
         ensure  => file,
         source  => 'puppet:///modules/solr/jetty-default',
         require => Package['jetty'],
       }
     }
-    if $::lsbdistcodename == 'xenial': {
+    if $::lsbdistcodename == 'xenial' {
       file { '/etc/default/jetty8':
         ensure  => file,
         source  => 'puppet:///modules/solr/jetty-default',
