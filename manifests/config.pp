@@ -19,6 +19,7 @@ class solr::config(
   $jetty_home     = $solr::params::jetty_home,
   $solr_home      = $solr::params::solr_home,
   $dist_root      = $solr::params::dist_root,
+  $jetty_package  = $solr::params::jetty_package,
   ) inherits solr::params {
 
   if versioncmp($::solr::version, '4.1') < 0 {
@@ -36,12 +37,6 @@ class solr::config(
   if versioncmp($::solr::version, '5.0') < 0 {
 
     #Copy the jetty config file
-    if $::lsbdistcodename == 'trusty' {
-      $jetty_package = 'jetty'
-    } else {
-      $jetty_package = 'jetty8'
-    }
-
     file { "/etc/default/${jetty_package}":
       ensure  => file,
       source  => 'puppet:///modules/solr/jetty-default',
