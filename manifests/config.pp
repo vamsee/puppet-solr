@@ -39,7 +39,7 @@ class solr::config(
     #Copy the jetty config file
     file { "/etc/default/${jetty_package}":
       ensure  => file,
-      source  => 'puppet:///modules/solr/jetty-default',
+      content => template('solr/jetty-default.erb'),
       require => Package["${jetty_package}"],
     }
 
