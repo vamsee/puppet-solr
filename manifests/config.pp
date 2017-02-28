@@ -47,7 +47,7 @@ class solr::config(
       file { '/etc/default/jetty8':
         ensure  => file,
         source  => 'puppet:///modules/solr/jetty-default',
-        require => Package['jetty'],
+        require => Package['jetty8'],
       }
     }
 
