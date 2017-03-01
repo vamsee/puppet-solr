@@ -105,7 +105,7 @@ class solr::config(
         path    => [ '/bin', '/sbin' , '/usr/bin', '/usr/sbin', '/usr/local/bin' ],
         command =>  "cp ${dist_root}/${solr_name}/example/lib/ext/*.jar WEB-INF/lib",
         cwd     =>  $solr_home,
-        onlyif  =>  "test ! -d ${solr_home}/WEB-INF",
+        onlyif  =>  "test ! -f ${solr_home}/WEB-INF/lib/log4j*.jar",
         require =>  Exec['extract-solr'],
       }
     }
