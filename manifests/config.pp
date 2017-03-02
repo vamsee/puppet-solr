@@ -19,6 +19,8 @@ class solr::config(
   $jetty_home     = $solr::params::jetty_home,
   $solr_home      = $solr::params::solr_home,
   $dist_root      = $solr::params::dist_root,
+  $jetty_package  = $solr::params::jetty_package,
+  $jdk_dirs       = $solr::params::jdk_dirs,
   ) inherits solr::params {
 
   if versioncmp($::solr::version, '4.1') < 0 {
@@ -36,17 +38,33 @@ class solr::config(
   if versioncmp($::solr::version, '5.0') < 0 {
 
     #Copy the jetty config file
-    file { '/etc/default/jetty':
+    file { "/etc/default/${jetty_package}":
       ensure  => file,
-      source  => 'puppet:///modules/solr/jetty-default',
-      require => Package['jetty'],
+      content => template('solr/jetty-default.erb'),
+      require => Package["${jetty_package}"],
     }
 
     file { $solr_home:
       ensure  => directory,
       owner   => 'jetty',
       group   => 'jetty',
-      require => Package['jetty'],
+      require => Package["${jetty_package}"],
+    }
+
+    file { '/var/lib/solr':
+      ensure  => directory,
+      owner   => 'jetty',
+      group   => 'jetty',
+      mode    => '0700',
+      require => Package["${jetty_package}"],
+    }
+
+    file { "${solr_home}/solr.xml":
+      ensure  => 'file',
+      owner   => 'jetty',
+      group   => 'jetty',
+      content => template('solr/solr.xml.erb'),
+      require => File["/etc/default/${jetty_package}"],
     }
 
     # download only if WEB-INF is not present and tgz file is not in $dist_root:
@@ -81,7 +99,7 @@ class solr::config(
         path    => [ '/bin', '/sbin' , '/usr/bin', '/usr/sbin', '/usr/local/bin' ],
         command =>  "cp ${dist_root}/${solr_name}/example/lib/ext/*.jar WEB-INF/lib",
         cwd     =>  $solr_home,
-        onlyif  =>  "test ! -d ${solr_home}/WEB-INF",
+        onlyif  =>  "test ! -f ${solr_home}/WEB-INF/lib/log4j*.jar",
         require =>  Exec['extract-solr'],
       }
     }
@@ -93,22 +111,6 @@ class solr::config(
         creates =>  "${jetty_home}/lib/${jsp_jar}",
         timeout =>  0,
       }
-    }
-
-    file { '/var/lib/solr':
-      ensure  => directory,
-      owner   => 'jetty',
-      group   => 'jetty',
-      mode    => '0700',
-      require => Package['jetty'],
-    }
-
-    file { "${solr_home}/solr.xml":
-      ensure  => 'file',
-      owner   => 'jetty',
-      group   => 'jetty',
-      content => template('solr/solr.xml.erb'),
-      require => File['/etc/default/jetty'],
     }
 
     file { "${jetty_home}/webapps/solr":
@@ -158,4 +160,3 @@ class solr::config(
     }
   }
 }
-

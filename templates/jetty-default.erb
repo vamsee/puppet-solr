@@ -32,7 +32,7 @@ JAVA_OPTIONS="-Dsolr.solr.home=/usr/share/solr -Dsolr.data.dir=/var/lib/solr $JA
 
 # The first existing directory is used for JAVA_HOME (if JAVA_HOME is not
 # defined in /etc/default/jetty). Should contain a list of space separated directories.
-JDK_DIRS="/usr/lib/jvm/default-java /usr/lib/jvm/java-6-sun"
+JDK_DIRS="<%= @jdk_dirs -%>"
 
 # Java compiler to use for translating JavaServer Pages (JSPs). You can use all
 # compilers that are accepted by Ant's build.compiler property.
