@@ -25,11 +25,6 @@ class solr::params {
       $jdk_dirs = '/usr/lib/jvm/default-java /usr/lib/jvm/java-7-openjdk-amd64'
     }
 
-    'xenial': {
-      $jetty_package = 'jetty8'
-      $jdk_dirs = '/usr/lib/jvm/default-java /usr/lib/jvm/java-7-openjdk-amd64'
-    }
-
     default: {
       $jetty_package = 'jetty8'
       $jdk_dirs = '/usr/lib/jvm/default-java /usr/lib/jvm/java-7-openjdk-amd64'
