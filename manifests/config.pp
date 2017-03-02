@@ -20,6 +20,7 @@ class solr::config(
   $solr_home      = $solr::params::solr_home,
   $dist_root      = $solr::params::dist_root,
   $jetty_package  = $solr::params::jetty_package,
+  $jdk_dirs       = $solr::params::jdk_dirs,
   ) inherits solr::params {
 
   if versioncmp($::solr::version, '4.1') < 0 {
@@ -35,13 +36,6 @@ class solr::config(
 
   # This works for versions < 5.0 
   if versioncmp($::solr::version, '5.0') < 0 {
-
-    if $::lsbdistcodename == 'trusty' {
-      $jdk_dirs = '/usr/lib/jvm/default-java /usr/lib/jvm/java-6-sun'
-    }
-    if $::lsbdistcodename == 'xenial' {
-      $jdk_dirs = '/usr/lib/jvm/java-7-openjdk-amd64'
-    }
 
     #Copy the jetty config file
     file { "/etc/default/${jetty_package}":

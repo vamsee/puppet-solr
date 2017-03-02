@@ -7,20 +7,31 @@
 #
 class solr::params {
 
-  if $::lsbdistcodename == 'trusty' {
-    $jetty_home    = '/usr/share/jetty'
-  } else {
-    $jetty_home    = '/usr/share/jetty8'
-  }
   $solr_home     = '/usr/share/solr'
   $solr_version  = '4.7.2'
   $mirror_site   = 'http://www.us.apache.org/dist/lucene/solr'
   $data_dir      = '/var/lib/solr'
   $cores         = ['default']
   $dist_root     = '/tmp'
-  if $::lsbdistcodename == 'trusty' {
-    $jetty_package = 'jetty'
-  } else {
-    $jetty_package = 'jetty8'
-  }
+
+  case $::lsbdistcodename {
+    'precise': {
+      $jetty_package = 'jetty'
+      $jdk_dirs = '/usr/lib/jvm/default-java /usr/lib/jvm/java-6-sun'
+    }
+
+    'trusty': {
+      $jetty_package = 'jetty'
+      $jdk_dirs = '/usr/lib/jvm/default-java /usr/lib/jvm/java-7-openjdk-amd64'
+    }
+
+    'xenial': {
+      $jetty_package = 'jetty8'
+      $jdk_dirs = '/usr/lib/jvm/default-java /usr/lib/jvm/java-7-openjdk-amd64'
+    }
+
+    default: {
+      $jetty_package = 'jetty8'
+      $jdk_dirs = '/usr/lib/jvm/default-java /usr/lib/jvm/java-7-openjdk-amd64'
+    }
 }
