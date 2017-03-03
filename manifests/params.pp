@@ -32,4 +32,5 @@ class solr::params {
       $jetty_package = 'jetty8'
       $jdk_dirs = '/usr/lib/jvm/default-java /usr/lib/jvm/java-7-openjdk-amd64'
     }
+  }
 }
