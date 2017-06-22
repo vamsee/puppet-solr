@@ -25,7 +25,7 @@ JETTY_PORT=8983
 #JETTY_ARGS=
 
 # Extra options to pass to the JVM         
-JAVA_OPTIONS="-Dsolr.solr.home=/usr/share/solr -Dsolr.data.dir=/var/lib/solr $JAVA_OPTIONS"
+JAVA_OPTIONS="-Xss1280k -Dsolr.solr.home=/usr/share/solr -Dsolr.data.dir=/var/lib/solr $JAVA_OPTIONS"
 
 # Home of Java installation.
 # JAVA_HOME=
