@@ -31,7 +31,7 @@ class solr::config(
   $dl_name        = "${solr_name}.tgz"
   $download_url   = "${mirror}/${version}/${dl_name}"
 
-  $jsp_jar = "jsp-2.1-6.0.2.jar"
+  $jsp_jar = 'jsp-2.1-6.0.2.jar'
   $jsp_url = "http://maven.ibiblio.org/maven2/jetty/jsp/2.1-6.0.2/${jsp_jar}"
 
   # This works for versions < 5.0 
@@ -41,14 +41,14 @@ class solr::config(
     file { "/etc/default/${jetty_package}":
       ensure  => file,
       content => template('solr/jetty-default.erb'),
-      require => Package["${jetty_package}"],
+      require => Package[$jetty_package],
     }
 
     file { $solr_home:
       ensure  => directory,
       owner   => 'jetty',
       group   => 'jetty',
-      require => Package["${jetty_package}"],
+      require => Package[$jetty_package],
     }
 
     file { '/var/lib/solr':
@@ -56,7 +56,7 @@ class solr::config(
       owner   => 'jetty',
       group   => 'jetty',
       mode    => '0700',
-      require => Package["${jetty_package}"],
+      require => Package[$jetty_package],
     }
 
     file { "${solr_home}/solr.xml":
@@ -153,10 +153,20 @@ class solr::config(
 
     exec { 'install-solr':
       path    => [ '/bin', '/sbin' , '/usr/bin', '/usr/sbin', '/usr/local/bin', "${dist_root}/${solr_name}/bin" ],
-      command =>  "install_solr_service.sh ${dist_root}/${dl_name} -d ${data_dir}",
-      cwd     =>  "$dist_root/${solr_name}",
+      command =>  "install_solr_service.sh ${dist_root}/${dl_name} -d ${::solr::params::data_dir}",
+      cwd     =>  "${dist_root}/${solr_name}",
       onlyif  =>  "test ! -d /opt/${solr_name}",
       require =>  Exec['extract-solr'],
+    }
+
+    if is_hash($cores) {
+      create_resources('::solr::core', $cores, {})
+    }
+    elsif is_array($cores) or is_string($cores) {
+      solr::core { $cores: }
+    }
+    else {
+      fail('Parameter cores must be a hash, array or string')
     }
   }
 }

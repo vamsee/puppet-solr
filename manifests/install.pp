@@ -26,7 +26,7 @@ class solr::install {
             require => Package['default-jdk'],
           }
         }
-        
+
         if ! defined(Package['libjetty-extra']) {
           package { 'libjetty-extra':
             ensure  => present,
@@ -37,8 +37,8 @@ class solr::install {
 
       'xenial': {
         exec { 'Add_OpenJDK7_Repo':
-          command => "add-apt-repository -y ppa:openjdk-r/ppa; apt-get -y update",
-          creates => "/etc/apt/sources.list.d/openjdk-r-ubuntu-ppa-xenial.list",
+          command => 'add-apt-repository -y ppa:openjdk-r/ppa; apt-get -y update',
+          creates => '/etc/apt/sources.list.d/openjdk-r-ubuntu-ppa-xenial.list',
         }
 
         if ! defined(Package['openjdk-7-jdk']) {
@@ -80,9 +80,13 @@ class solr::install {
     }
   } else {
     exec { 'install-java8-for-solr':
-      command => "add-apt-repository -y ppa:webupd8team/java; apt-get -y update; echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections; apt-get -y install oracle-java8-installer",
+      command => 'add-apt-repository -y ppa:webupd8team/java;\
+apt-get -y update;\
+echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true |\
+/usr/bin/debconf-set-selections; apt-get -y install oracle-java8-installer',
       require => Package['python-software-properties', 'software-properties-common'],
-      creates => "/usr/lib/jvm/java-8-oracle"
+      timeout => 900,
+      creates => '/usr/lib/jvm/java-8-oracle'
     }
   }
 

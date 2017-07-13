@@ -65,14 +65,14 @@ class solr (
     default   => $dist_root,
   }
 
-  class {'solr::install': } ->
-  class {'solr::config':
+  class {'solr::install': }
+-> class {'solr::config':
     cores     => $my_cores,
     version   => $my_version,
     mirror    => $my_mirror,
     dist_root => $my_dist_root,
-  } ~>
-  class {'solr::service': } ->
-  Class['solr']
+  }
+~> class {'solr::service': }
+-> Class['solr']
 
 }
