@@ -158,5 +158,15 @@ class solr::config(
       onlyif  =>  "test ! -d /opt/${solr_name}",
       require =>  Exec['extract-solr'],
     }
+
+    if is_hash($cores) {
+      create_resources('::solr::core', $cores, {})
+    }
+    elsif is_array($cores) or is_string($cores) {
+      solr::core { $cores: }
+    }
+    else {
+      fail('Parameter cores must be a hash, array or string')
+    }
   }
 }

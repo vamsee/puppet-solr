@@ -23,47 +23,88 @@ define solr::core(
 
   $solr_home  = $solr::params::solr_home
 
-  file { "${solr_home}/${core_name}":
-    ensure  => directory,
-    owner   => 'jetty',
-    group   => 'jetty',
-    require => File[$solr_home],
-  }
+  if versioncmp($::solr::version, '5.0') < 0 {
 
-  case $config_type {
-    'directory': {
-      #Copy its config over
-      file { "${solr_home}/${core_name}/conf":
-        ensure  => directory,
-        owner   => 'jetty',
-        group   => 'jetty',
-        recurse => true,
-        source  => $config_source,
-        require => File["${solr_home}/${core_name}"],
+    file { "${solr_home}/${core_name}":
+      ensure  => directory,
+      owner   => 'jetty',
+      group   => 'jetty',
+      require => File[$solr_home],
+    }
+
+    case $config_type {
+      'directory': {
+        #Copy its config over
+        file { "${solr_home}/${core_name}/conf":
+          ensure  => directory,
+          owner   => 'jetty',
+          group   => 'jetty',
+          recurse => true,
+          source  => $config_source,
+          require => File["${solr_home}/${core_name}"],
+        }
+      }
+      'link': {
+        # Link the config directory
+        file {"${solr_home}/${core_name}/conf":
+          ensure  => 'link',
+          owner   => 'jetty',
+          group   => 'jetty',
+          target  => $config_source,
+          require => File["${solr_home}/${core_name}"],
+        }
+      }
+      default: {
+        fail('Unsupported value for parameter config_type')
       }
     }
-    'link': {
-      # Link the config directory
-      file {"${solr_home}/${core_name}/conf":
-        ensure  => 'link',
-        owner   => 'jetty',
-        group   => 'jetty',
-        target  => $config_source,
-        require => File["${solr_home}/${core_name}"],
+
+    #Finally, create the data directory where solr stores
+    #its indexes with proper directory ownership/permissions.
+    file { "/var/lib/solr/${core_name}":
+      ensure  => directory,
+      mode    => '2770',
+      owner   => 'jetty',
+      group   => 'jetty',
+      require => File["${solr_home}/${core_name}/conf"],
+    }
+  } else {
+    ## SOLR 5 core install section
+    file { "/var/lib/solr/data/${core_name}":
+      ensure  => directory,
+      mode    => '2770',
+      owner   => 'solr',
+      group   => 'solr',
+    }
+    case $config_type {
+      'directory': {
+        #Copy its config over
+        file { "/var/lib/solr/data/${core_name}/conf":
+          ensure  => directory,
+          owner   => 'solr',
+          group   => 'solr',
+          recurse => true,
+          source  => $config_source,
+          require => File["/var/lib/solr/data/${core_name}"],
+        }
+      }
+      'link': {
+        # Link the config directory
+        file {"/var/lib/solr/data/${core_name}/conf":
+          ensure  => 'link',
+          owner   => 'solr',
+          group   => 'solr',
+          target  => $config_source,
+          require => File["/var/lib/solr/data/${core_name}"],
+        }
+      }
+      default: {
+        fail('Unsupported value for parameter config_type')
       }
     }
-    default: {
-      fail('Unsupported value for parameter config_type')
+    exec { 'create-solr5-cores': 
+      command => "curl 'http://localhost:8983/solr/admin/cores?action=CREATE&name=${core_name}&instanceDir=${core_name}'",
+      require => File["/var/lib/solr/data/${core_name}/conf"],
     }
   }
-
-  #Finally, create the data directory where solr stores
-  #its indexes with proper directory ownership/permissions.
-  file { "/var/lib/solr/${core_name}":
-    ensure  => directory,
-    owner   => 'jetty',
-    group   => 'jetty',
-    require => File["${solr_home}/${core_name}/conf"],
-  }
-
 }
