@@ -71,10 +71,10 @@ define solr::core(
   } else {
     ## SOLR 5 core install section
     file { "/var/lib/solr/data/${core_name}":
-      ensure  => directory,
-      mode    => '2770',
-      owner   => 'solr',
-      group   => 'solr',
+      ensure => directory,
+      mode   => '2770',
+      owner  => 'solr',
+      group  => 'solr',
     }
     case $config_type {
       'directory': {
@@ -102,7 +102,7 @@ define solr::core(
         fail('Unsupported value for parameter config_type')
       }
     }
-    exec { 'create-solr5-cores': 
+    exec { 'create-solr5-cores':
       command => "curl 'http://localhost:8983/solr/admin/cores?action=CREATE&name=${core_name}&instanceDir=${core_name}'",
       creates => "/var/lib/solr/data/${core_name}/core.properties",
       require => File["/var/lib/solr/data/${core_name}/conf"],
