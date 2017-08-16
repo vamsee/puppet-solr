@@ -41,20 +41,6 @@ class solr::install {
           creates => '/etc/apt/sources.list.d/openjdk-r-ubuntu-ppa-xenial.list',
         }
 
-        if ! defined(Package['openjdk-7-jdk']) {
-          package { 'openjdk-7-jdk':
-            ensure  => present,
-            require => Exec['Add_OpenJDK7_Repo'],
-          }
-        }
-
-        if ! defined(Package['openjdk-7-jre']) {
-          package { 'openjdk-7-jre':
-            ensure  => present,
-            require => Exec['Add_OpenJDK7_Repo'],
-          }
-        }
-
         if ! defined(Package['openjdk-7-jre-headless']) {
           package { 'openjdk-7-jre-headless':
             ensure  => present,
@@ -65,14 +51,14 @@ class solr::install {
         if ! defined(Package['jetty8']) {
           package { 'jetty8':
             ensure  => present,
-            require => [Package['openjdk-7-jdk'],Package['openjdk-7-jre'],Package['openjdk-7-jre-headless']],
+            require => Package['openjdk-7-jre-headless'],
           }
         }
 
         if ! defined(Package['libjetty8-extra-java']) {
           package { 'libjetty8-extra-java':
             ensure  => present,
-            require => [Package['openjdk-7-jdk'],Package['openjdk-7-jre'],Package['openjdk-7-jre-headless']],
+            require => Package['openjdk-7-jre-headless'],
           }
         }
       }
