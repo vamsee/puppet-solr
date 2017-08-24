@@ -32,7 +32,7 @@ class solr::config(
   $download_url   = "${mirror}/${version}/${dl_name}"
 
   $jsp_jar = 'jsp-2.1-6.0.2.jar'
-  $jsp_url = "http://maven.ibiblio.org/maven2/jetty/jsp/2.1-6.0.2/${jsp_jar}"
+  $jsp_url = "http://uk.maven.org/maven2/jetty/jsp/2.1-6.0.2/${jsp_jar}"
 
   # This works for versions < 5.0 
   if versioncmp($::solr::version, '5.0') < 0 {
