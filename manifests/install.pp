@@ -61,6 +61,15 @@ class solr::install {
             require => Package['openjdk-7-jre-headless'],
           }
         }
+
+        file { '/etc/init.d/jetty8':
+          ensure  => present,
+          group   => root,
+          owner   => root,
+          mode    => '0755',
+          replace => yes,
+          source  => 'puppet:///modules/solr/jetty8',
+          require => Package['jetty8'],
       }
       default: { }
     }
