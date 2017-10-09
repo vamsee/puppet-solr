@@ -21,12 +21,17 @@ define solr::core(
 ) {
   include solr::params
 
-  $solr_home  = $solr::params::solr_home
+  $solr_home  = $::solr::params::solr_home
+  $data_dir   = $::solr::params::data_dir
+
+  $jetty_service = $::solr::params::jetty_service
+  $jetty_user = $::solr::params::jetty_user
+  $jetty_group = $::solr::params::jetty_group
 
   file { "${solr_home}/${core_name}":
     ensure  => directory,
-    owner   => 'jetty',
-    group   => 'jetty',
+    owner   => $jetty_user,
+    group   => $jetty_group,
     require => File[$solr_home],
   }
 
@@ -35,19 +40,20 @@ define solr::core(
       #Copy its config over
       file { "${solr_home}/${core_name}/conf":
         ensure  => directory,
-        owner   => 'jetty',
-        group   => 'jetty',
+        owner   => $jetty_user,
+        group   => $jetty_group,
         recurse => true,
+        replace => false,
         source  => $config_source,
         require => File["${solr_home}/${core_name}"],
-      }
+        }
     }
     'link': {
       # Link the config directory
       file {"${solr_home}/${core_name}/conf":
         ensure  => 'link',
-        owner   => 'jetty',
-        group   => 'jetty',
+        owner   => $jetty_user,
+        group   => $jetty_group,
         target  => $config_source,
         require => File["${solr_home}/${core_name}"],
       }
@@ -59,11 +65,25 @@ define solr::core(
 
   #Finally, create the data directory where solr stores
   #its indexes with proper directory ownership/permissions.
-  file { "/var/lib/solr/${core_name}":
+  file { "${data_dir}/${core_name}":
     ensure  => directory,
-    owner   => 'jetty',
-    group   => 'jetty',
+    owner   => $jetty_user,
+    group   => $jetty_group,
     require => File["${solr_home}/${core_name}/conf"],
+  }
+
+  xml_fragment { "${core_name}_config":
+    path    => "${solr_home}/solr.xml",
+    xpath   => "/solr/cores/core[@name='${core_name}']",
+    content => {
+      attributes => {
+        name        => $core_name,
+        instanceDir => "${solr_home}/${core_name}",
+        dataDir     => "${data_dir}/${core_name}",
+      },
+    },
+    require => File["${data_dir}/${core_name}"],
+    notify  => Service[$jetty_service],
   }
 
 }

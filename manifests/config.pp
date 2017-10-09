@@ -16,7 +16,16 @@ class solr::config(
   $cores          = $solr::params::cores,
   $version        = $solr::params::solr_version,
   $mirror         = $solr::params::mirror_site,
+
+  $listen_address = $solr::params::listen_address,
+  $listen_port    = $solr::params::listen_port,
+
+  $jetty_package  = $solr::params::jetty_package,
+  $jetty_service  = $solr::params::jetty_service,
   $jetty_home     = $solr::params::jetty_home,
+  $jetty_user     = $solr::params::jetty_user,
+  $jetty_group    = $solr::params::jetty_group,
+
   $solr_home      = $solr::params::solr_home,
   $dist_root      = $solr::params::dist_root,
   ) inherits solr::params {
@@ -25,17 +34,17 @@ class solr::config(
   $download_url   = "${mirror}/${version}/${dl_name}"
 
   #Copy the jetty config file
-  file { '/etc/default/jetty':
+  file { "/etc/default/${jetty_service}":
     ensure  => file,
-    source  => 'puppet:///modules/solr/jetty-default',
-    require => Package['jetty'],
+    content => template('solr/jetty-default.erb'),
+    require => Package[$jetty_package],
   }
 
   file { $solr_home:
     ensure  => directory,
-    owner   => 'jetty',
-    group   => 'jetty',
-    require => Package['jetty'],
+    owner   => $jetty_user,
+    group   => $jetty_group,
+    require => Package[$jetty_package],
   }
 
   # download only if WEB-INF is not present and tgz file is not in $dist_root:
@@ -69,24 +78,32 @@ class solr::config(
 
   file { '/var/lib/solr':
     ensure  => directory,
-    owner   => 'jetty',
-    group   => 'jetty',
+    owner   => $jetty_user,
+    group   => $jetty_group,
     mode    => '0700',
-    require => Package['jetty'],
+    require => Package[$jetty_package],
   }
 
   file { "${solr_home}/solr.xml":
     ensure  => 'file',
-    owner   => 'jetty',
-    group   => 'jetty',
+    owner   => $jetty_user,
+    group   => $jetty_group,
     content => template('solr/solr.xml.erb'),
-    require => File['/etc/default/jetty'],
+    require => File["/etc/default/${jetty_service}"],
+  }
+
+  file { "${jetty_home}/webapps":
+    ensure  => 'directory',
+    owner   => $jetty_user,
+    group   => $jetty_group,
+    mode    => '0700',
+    require => File["${solr_home}/solr.xml"],
   }
 
   file { "${jetty_home}/webapps/solr":
     ensure  => 'link',
     target  => $solr_home,
-    require => File["${solr_home}/solr.xml"],
+    require => File["${jetty_home}/webapps"],
   }
   if is_hash($cores) {
     create_resources('::solr::core', $cores, {})
@@ -100,4 +117,3 @@ class solr::config(
     fail('Parameter cores must be a hash, array or string')
   }
 }
-

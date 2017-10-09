@@ -2,12 +2,19 @@ require 'spec_helper'
 
 describe 'solr::config' do
 
+  let :facts do
+    {
+      :osfamily => 'Debian',
+      :operatingsystem => 'Ubuntu',
+      :operatingsystemrelease => '14.04',
+    }
+  end
+
   context "when params aren't passed - default case" do
 
     it { should contain_file('/etc/default/jetty')
         .with({
                 'ensure'    =>    'file',
-                'source'    =>    'puppet:///modules/solr/jetty-default',
                 'require'   =>    'Package[jetty]',
               })
     }
@@ -41,11 +48,20 @@ describe 'solr::config' do
               })
     }
 
+    it { should contain_file('/usr/share/jetty/webapps')
+        .with({
+                'ensure'    => 'directory',
+                'owner'     => 'jetty',
+                'group'     => 'jetty',
+                'mode'      => '0700',
+                'require'   => 'File[/usr/share/solr/solr.xml]',
+              })
+    }
     it { should contain_file('/usr/share/jetty/webapps/solr')
         .with({
                 'ensure'    => 'link',
                 'target'    => '/usr/share/solr',
-                'require'   => 'File[/usr/share/solr/solr.xml]',
+                'require'   => 'File[/usr/share/jetty/webapps]',
               })
     }
 
@@ -92,18 +108,19 @@ describe 'solr::config' do
   context "when params are passed" do
 
     let(:params) { {
-        :cores     => ['dev', 'prod'],
-        :version   => '5.6.2',
-        :mirror    => 'http://some-random-site.us',
-        :dist_root => '/opt/tmpdata',
+        :listen_address => '127.0.0.1',
+        :listen_port    => 1234,
+        :cores          => ['dev', 'prod'],
+        :version        => '5.6.2',
+        :mirror         => 'http://some-random-site.us',
+        :dist_root      => '/opt/tmpdata',
     } }
 
     it { should contain_file('/etc/default/jetty')
-        .with({
-                'ensure'    =>    'file',
-                'source'    =>    'puppet:///modules/solr/jetty-default',
-                'require'   =>    'Package[jetty]',
-              })
+      .with({
+              'ensure'    =>    'file',
+              'require'   =>    'Package[jetty]',
+            })
     }
 
     it { should contain_file('/usr/share/solr')
@@ -139,11 +156,20 @@ describe 'solr::config' do
         .with_content(/\/var\/lib\/solr\/dev/)
     }
 
+    it { should contain_file('/usr/share/jetty/webapps')
+        .with({
+                'ensure'    => 'directory',
+                'owner'     => 'jetty',
+                'group'     => 'jetty',
+                'mode'      => '0700',
+                'require'   => 'File[/usr/share/solr/solr.xml]',
+              })
+    }
     it { should contain_file('/usr/share/jetty/webapps/solr')
         .with({
                 'ensure'    => 'link',
                 'target'    => '/usr/share/solr',
-                'require'   => 'File[/usr/share/solr/solr.xml]',
+                'require'   => 'File[/usr/share/jetty/webapps]',
               })
     }
 
