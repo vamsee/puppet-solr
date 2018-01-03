@@ -34,6 +34,20 @@ class solr::params {
         }
       }
     }
+    'Ubuntu': {
+      case $::operatingsystemmajrelease {
+        '16.04': {
+          $jetty_package = 'jetty8'
+          $jetty_service = 'jetty8'
+          $jetty_home    = '/usr/share/jetty8'
+        }
+        default: {
+          $jetty_package = 'jetty'
+          $jetty_service = 'jetty'
+          $jetty_home    = '/usr/share/jetty'
+        }
+      }
+    }
     default: {
       $jetty_package = 'jetty'
       $jetty_service = 'jetty'
